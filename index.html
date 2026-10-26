@@ -831,6 +831,159 @@ window.addEventListener('beforeinstallprompt', (e) => {
                 closeModal('installAppModal');
             }
         });
+        // ✅ بحث شامل: المواد + الوحدات + الدروس + المحتوى + الامتحانات
+window.performSearch = async function() {
+    const term = document.getElementById('searchInput').value.trim().toLowerCase();
+    const resultsDiv = document.getElementById('searchResults');
+
+    if (!term) {
+        resultsDiv.innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة أو الدرس أو المحتوى للبحث...</p>';
+        return;
+    }
+
+    resultsDiv.innerHTML = '<p style="text-align:center; color:var(--muted);">⏳ جاري البحث...</p>';
+
+    let allResults = [];
+
+    // ===== 1. البحث في المواد الثابتة =====
+    const subjectMatches = subjectsData.filter(sub => 
+        sub.title.toLowerCase().includes(term)
+    );
+    subjectMatches.forEach(sub => {
+        allResults.push({
+            type: 'subject',
+            icon: '📚',
+            title: sub.title,
+            subtitle: 'مادة',
+            action: sub.file === 'quiz' 
+                ? `openSubject('quiz', '${sub.title}')` 
+                : `openEmbedded('${sub.file}', '${sub.title}')`
+        });
+    });
+
+    // ===== 2. البحث في Firestore (وحدات + دروس + محتوى) =====
+    try {
+        // البحث في كل المحتوى
+        const contentSnap = await getDocs(collection(db, "content"));
+        const allContent = [];
+        contentSnap.forEach(d => allContent.push({ id: d.id, ...d.data() }));
+
+        // وحدات
+        allContent.filter(x => x.kind === 'unit' && x.title.toLowerCase().includes(term)).forEach(u => {
+            const subjectName = getSubjectName(u.subject);
+            allResults.push({
+                type: 'unit',
+                icon: '📘',
+                title: u.title,
+                subtitle: `وحدة في ${subjectName}`,
+                action: `openEmbedded('${getSubjectFile(u.subject)}?subject=${u.subject}', '${subjectName}')`
+            });
+        });
+
+        // دروس
+        allContent.filter(x => x.kind === 'lesson' && x.title.toLowerCase().includes(term)).forEach(l => {
+            const parentUnit = allContent.find(u => u.id === l.parentId);
+            const subjectName = getSubjectName(l.subject);
+            allResults.push({
+                type: 'lesson',
+                icon: '📝',
+                title: l.title,
+                subtitle: `درس في ${subjectName}${parentUnit ? ' — ' + parentUnit.title : ''}`,
+                action: `openEmbedded('${getSubjectFile(l.subject)}?subject=${l.subject}', '${subjectName}')`
+            });
+        });
+
+        // محتوى (نص أو عنوان)
+        allContent.filter(x => x.kind === 'item' && 
+            (x.title.toLowerCase().includes(term) || (x.text && x.text.toLowerCase().includes(term)))
+        ).forEach(it => {
+            const parentLesson = allContent.find(l => l.id === it.parentId);
+            const subjectName = getSubjectName(it.subject);
+            allResults.push({
+                type: 'item',
+                icon: '🔹',
+                title: it.title,
+                subtitle: `محتوى في ${subjectName}${parentLesson ? ' — ' + parentLesson.title : ''}`,
+                action: `openEmbedded('${getSubjectFile(it.subject)}?subject=${it.subject}', '${subjectName}')`
+            });
+        });
+
+        // ===== 3. البحث في الامتحانات =====
+        const examsSnap = await getDocs(collection(db, "exams"));
+        examsSnap.forEach(d => {
+            const exam = d.data();
+            if (exam.title && exam.title.toLowerCase().includes(term)) {
+                const subjectName = getSubjectName(exam.subject);
+                allResults.push({
+                    type: 'exam',
+                    icon: '📝',
+                    title: exam.title,
+                    subtitle: `امتحان في ${subjectName} (${exam.questions?.length || 0} أسئلة)`,
+                    action: `openEmbedded('test.html', 'اختبر نفسك')`
+                });
+            }
+        });
+    } catch (e) {
+        console.error('Search error:', e);
+    }
+
+    // ===== 4. عرض النتائج =====
+    if (allResults.length === 0) {
+        resultsDiv.innerHTML = '<p style="text-align:center; color:var(--danger); font-weight:bold;">❌ لا توجد نتائج مطابقة</p>';
+        return;
+    }
+
+    // تجميع النتائج حسب النوع
+    const groups = {
+        subject: { label: '📚 المواد', items: [] },
+        unit: { label: '📘 الوحدات', items: [] },
+        lesson: { label: '📝 الدروس', items: [] },
+        item: { label: '🔹 المحتوى', items: [] },
+        exam: { label: '📝 الامتحانات', items: [] }
+    };
+    allResults.forEach(r => groups[r.type].items.push(r));
+
+    let html = `<p style="text-align:center; color:var(--muted); margin-bottom:15px;">تم العثور على ${allResults.length} نتيجة</p>`;
+
+    Object.keys(groups).forEach(key => {
+        const g = groups[key];
+        if (g.items.length === 0) return;
+        html += `<h3 style="color:var(--accent); font-size:16px; margin:15px 0 8px;">${g.label} (${g.items.length})</h3>`;
+        html += g.items.map(item => `
+            <div class="subject-card" onclick="${item.action}" style="padding:15px 20px;">
+                <div>
+                    <h2 style="font-size:17px;">${item.icon} ${item.title}</h2>
+                    <p style="font-size:13px; color:var(--muted); margin-top:4px;">${item.subtitle}</p>
+                </div>
+                <span class="arrow" style="width:40px; height:40px; font-size:20px;">⬅️</span>
+            </div>
+        `).join('');
+    });
+
+    resultsDiv.innerHTML = html;
+};
+
+// ✅ دالة مساعدة: تحويل كود المادة لاسم عربي
+function getSubjectName(subject) {
+    const map = {
+        'arabic': 'العربي',
+        'english': 'الإنجليزي',
+        'history': 'التاريخ',
+        'programming': 'البرمجة'
+    };
+    return map[subject] || subject;
+}
+
+// ✅ دالة مساعدة: تحويل كود المادة لاسم الملف
+function getSubjectFile(subject) {
+    const map = {
+        'arabic': 'Arabic.html',
+        'english': 'English.html',
+        'history': 'History.html',
+        'programming': 'programming.html'
+    };
+    return map[subject] || 'Arabic.html';
+}
     </script>
 </body>
 </html>

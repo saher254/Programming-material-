@@ -368,7 +368,6 @@
 
     const list = document.getElementById('companiesList');
     list.innerHTML = market[country].companies.map(c => {
-        // 🌟 السهم واللون من أول ما تفتح
         let arrow = ' ⬆️'; 
         let colorClass = 'price-up';
         
@@ -394,6 +393,77 @@
             </div>
         </div>
     `}).join('');
+};
+
+let qtyTimer = null;
+let qtyHoldTimeout = null;
+
+window.startQtyChange = function(id, change) {
+    const input = document.getElementById('qty-' + id);
+    let val = parseInt(input.value) + change;
+    if (val < 0) val = 0;
+    
+    // 🌟 شيلنا الحد الأقصى عشان نقدر نزود براحتنا
+    input.value = val;
+
+    qtyHoldTimeout = setTimeout(() => {
+        qtyTimer = setInterval(() => {
+            let v = parseInt(input.value) + change;
+            if (v < 0) v = 0;
+            input.value = v;
+        }, 50);
+    }, 1000);
+};
+
+window.stopQtyChange = function() {
+    clearTimeout(qtyHoldTimeout);
+    if (qtyTimer) clearInterval(qtyTimer);
+    qtyTimer = null;
+    qtyHoldTimeout = null;
+};
+
+window.buy = function(id) {
+    const qty = parseInt(document.getElementById('qty-' + id).value);
+    
+    // 🌟 رسالة لو مفيش رقم
+    if (isNaN(qty) || qty <= 0) {
+        return alert("⚠️ من فضلك حدد عدد الأسهم اللي عايز تشتريها الأول (اكتب رقم أو استخدم زرار +)");
+    }
+    
+    const cost = qty * currentPrices[id];
+    
+    // 🌟 رسالة لو الفلوس مش كفاية
+    if (cost > cash) {
+        return alert("❌ رصيدك غير كافٍ لإتمام عملية الشراء! إنت معاك $" + cash.toFixed(2) + " بس.");
+    } 
+    
+    cash -= cost;
+    portfolio[id] += qty;
+    updateUI();
+    document.getElementById('holds-' + id).textContent = portfolio[id];
+    saveScore();
+    saveProgress();
+};
+
+window.sell = function(id) {
+    const qty = parseInt(document.getElementById('qty-' + id).value);
+    
+    // 🌟 رسالة لو مفيش رقم
+    if (isNaN(qty) || qty <= 0) {
+        return alert("⚠️ من فضلك حدد عدد الأسهم اللي عايز تبيعها الأول (اكتب رقم أو استخدم زرار +)");
+    }
+    
+    // 🌟 رسالة لو بيبيع أكتر من اللي معاه
+    if (qty > portfolio[id]) {
+        return alert("❌ مش معاك العدد ده من الأسهم! إنت بتمتلك " + portfolio[id] + " سهم بس.");
+    }
+    
+    cash += qty * currentPrices[id];
+    portfolio[id] -= qty;
+    updateUI();
+    document.getElementById('holds-' + id).textContent = portfolio[id];
+    saveScore();
+    saveProgress();
 };
 
 let qtyTimer = null;

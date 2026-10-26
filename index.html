@@ -154,6 +154,30 @@
     </style>
 </head>
 <body>
+    <script>
+    // 🌟 كود تحويل الروابط القديمة عشان محدش يضحك على حد
+    const currentPath = window.location.pathname;
+    
+    // لو حد دخل على اللينك القديم اللي فيه .saher
+    if (currentPath.includes('/.saher')) {
+        window.location.replace('https://saher254.github.io/');
+    }
+    
+    // لو حد دخل على اللينك القديم بتاع .com
+    if (currentPath.includes('/.com')) {
+        window.location.replace('https://saher254.github.io/');
+    }
+
+    // لو حد دخل على اللينك القديم بتاع Learn
+    if (currentPath.includes('/Learn')) {
+        window.location.replace('https://saher254.github.io/');
+    }
+
+    // 🌟 ضيف السطرين دول للينك الجديد بتاع JavaScript-
+    if (currentPath.includes('/JavaScript-') || currentPath.includes('/JavaScript')) {
+        window.location.replace('https://saher254.github.io/');
+    }
+    </script>
     <header class="main-header" id="mainHeader">
         <h1 onclick="showPage('home')">🎓 منصة البكالوريا</h1>
         <div class="header-actions">

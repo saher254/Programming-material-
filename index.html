@@ -805,13 +805,22 @@
         });
 
         let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            setTimeout(() => {
-                document.getElementById('installAppModal').classList.add('active');
-            }, 3000);
-        });
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // 🌟 نتأكد إن الرسالة ظهرت قبل كده ولا لأ
+    const hasSeenInstallPrompt = localStorage.getItem('hasSeenInstallPrompt');
+    
+    // لو مظهرتش قبل كده، نظهرها بعد 3 ثواني ونحفظ إنها ظهرت
+    if (!hasSeenInstallPrompt) {
+        setTimeout(() => {
+            document.getElementById('installAppModal').classList.add('active');
+            // نحفظ إنها ظهرت عشان متظهرش تاني
+            localStorage.setItem('hasSeenInstallPrompt', 'true');
+        }, 3000);
+    }
+});
 
         document.getElementById('customInstallBtn').addEventListener('click', async () => {
             if (deferredPrompt) {

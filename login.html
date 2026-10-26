@@ -117,17 +117,17 @@
 <body>
 
     <div class="login-card">
-        <div class="icon" id="formIcon">🎓</div>
-        <h1 id="formTitle">تسجيل الدخول</h1>
-        <p id="formSubtitle">أدخل اسمك وكلمة المرور للدخول إلى المنصة</p>
-        
-        <input type="text" id="username" placeholder="الاسم" autocomplete="off">
-        <input type="password" id="password" placeholder="كلمة المرور" autocomplete="off">
-        
-        <button onclick="handleLogin()" id="submitBtn">دخول</button>
-        <span class="toggle-link" onclick="toggleForm()" id="toggleBtn">ليس لديك حساب؟ سجل الآن</span>
-        
-        <div class="error-msg" id="errorMsg"></div>
+    <div class="icon" id="formIcon">🎓</div>
+    <h1 id="formTitle">إنشاء حساب جديد</h1>
+    <p id="formSubtitle">سجل اسمك وكلمة مرور للانضمام إلينا</p>
+    
+    <input type="text" id="username" placeholder="الاسم" autocomplete="off">
+    <input type="password" id="password" placeholder="كلمة المرور" autocomplete="off">
+    
+    <button onclick="handleLogin()" id="submitBtn">إنشاء حساب</button>
+    <span class="toggle-link" onclick="toggleForm()" id="toggleBtn">لديك حساب بالفعل؟ سجل الدخول</span>
+    
+    <div class="error-msg" id="errorMsg"></div>
     </div>
 
     <footer class="main-footer">
@@ -150,7 +150,7 @@
         const app = initializeApp(firebaseConfig, "loginApp");
         const db = getFirestore(app);
 
-        let isLoginMode = true;
+       let isLoginMode = false;
 
         window.toggleForm = function() {
             isLoginMode = !isLoginMode;

@@ -361,184 +361,121 @@
         currentNews = [allNews[startIdx % allNews.length], allNews[(startIdx + 1) % allNews.length]].filter(n => n);
         container.innerHTML = currentNews.map(n => `<div class="news-item">${n.text}</div>`).join('');
     }
-    window.showCountry = function(country, btn) {
-    currentCountry = country;
-    document.querySelectorAll('.country-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+                window.showCountry = function(country, btn) {
+            currentCountry = country;
+            document.querySelectorAll('.country-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-    const list = document.getElementById('companiesList');
-    list.innerHTML = market[country].companies.map(c => {
-        let arrow = ' ⬆️'; 
-        let colorClass = 'price-up';
-        
-        return `
-        <div class="company-card">
-            <div class="company-header">
-                <div class="company-name">${c.name}</div>
-                <div class="company-price ${colorClass}" id="price-${c.id}">$${currentPrices[c.id].toFixed(2)}${arrow}</div>
-            </div>
-            <div class="company-desc">${c.desc}</div>
-            <div class="holds-box">
-                <span class="holds-label">📦 تملك</span>
-                <span class="holds-value" id="holds-${c.id}">${portfolio[c.id]}</span>
-            </div>
-            <div class="trade-controls">
-                <div class="qty-box">
-                    <button class="qty-btn" onmousedown="startQtyChange('${c.id}', -1)" onmouseup="stopQtyChange()" onmouseleave="stopQtyChange()" ontouchstart="startQtyChange('${c.id}', -1)" ontouchend="stopQtyChange()">-</button>
-                    <input type="number" class="qty-val" id="qty-${c.id}" value="0" min="0">
-                    <button class="qty-btn" onmousedown="startQtyChange('${c.id}', 1)" onmouseup="stopQtyChange()" onmouseleave="stopQtyChange()" ontouchstart="startQtyChange('${c.id}', 1)" ontouchend="stopQtyChange()">+</button>
+            const list = document.getElementById('companiesList');
+            list.innerHTML = market[country].companies.map(c => {
+                let arrow = ' ⬆️'; 
+                let colorClass = 'price-up';
+                
+                return `
+                <div class="company-card">
+                    <div class="company-header">
+                        <div class="company-name">${c.name}</div>
+                        <div class="company-price ${colorClass}" id="price-${c.id}">$${currentPrices[c.id].toFixed(2)}${arrow}</div>
+                    </div>
+                    <div class="company-desc">${c.desc}</div>
+                    <div class="holds-box">
+                        <span class="holds-label">📦 تملك</span>
+                        <span class="holds-value" id="holds-${c.id}">${portfolio[c.id]}</span>
+                    </div>
+                    <div class="trade-controls">
+                        <div class="qty-box">
+                            <button class="qty-btn" onmousedown="startQtyChange('${c.id}', -1)" onmouseup="stopQtyChange()" onmouseleave="stopQtyChange()" ontouchstart="startQtyChange('${c.id}', -1)" ontouchend="stopQtyChange()">-</button>
+                            <input type="number" class="qty-val" id="qty-${c.id}" value="0" min="0">
+                            <button class="qty-btn" onmousedown="startQtyChange('${c.id}', 1)" onmouseup="stopQtyChange()" onmouseleave="stopQtyChange()" ontouchstart="startQtyChange('${c.id}', 1)" ontouchend="stopQtyChange()">+</button>
+                        </div>
+                        <button class="trade-btn buy-btn" onclick="buy('${c.id}')">شراء</button>
+                        <button class="trade-btn sell-btn" onclick="sell('${c.id}')">بيع</button>
+                    </div>
                 </div>
-                <button class="trade-btn buy-btn" onclick="buy('${c.id}')">شراء</button>
-                <button class="trade-btn sell-btn" onclick="sell('${c.id}')">بيع</button>
-            </div>
-        </div>
-    `}).join('');
-};
+            `}).join('');
+        };
 
-let qtyTimer = null;
-let qtyHoldTimeout = null;
+        let qtyTimer = null;
+        let qtyHoldTimeout = null;
 
-window.startQtyChange = function(id, change) {
-    const input = document.getElementById('qty-' + id);
-    let val = parseInt(input.value) + change;
-    if (val < 0) val = 0;
-    
-    // 🌟 شيلنا الحد الأقصى عشان نقدر نزود براحتنا
-    input.value = val;
+        window.startQtyChange = function(id, change) {
+            const input = document.getElementById('qty-' + id);
+            let val = parseInt(input.value) + change;
+            if (val < 0) val = 0;
+            input.value = val;
 
-    qtyHoldTimeout = setTimeout(() => {
-        qtyTimer = setInterval(() => {
-            let v = parseInt(input.value) + change;
-            if (v < 0) v = 0;
-            input.value = v;
-        }, 50);
-    }, 1000);
-};
+            qtyHoldTimeout = setTimeout(() => {
+                qtyTimer = setInterval(() => {
+                    let v = parseInt(input.value) + change;
+                    if (v < 0) v = 0;
+                    input.value = v;
+                }, 50);
+            }, 1000);
+        };
 
-window.stopQtyChange = function() {
-    clearTimeout(qtyHoldTimeout);
-    if (qtyTimer) clearInterval(qtyTimer);
-    qtyTimer = null;
-    qtyHoldTimeout = null;
-};
+        window.stopQtyChange = function() {
+            clearTimeout(qtyHoldTimeout);
+            if (qtyTimer) clearInterval(qtyTimer);
+            qtyTimer = null;
+            qtyHoldTimeout = null;
+        };
 
-window.buy = function(id) {
-    const qty = parseInt(document.getElementById('qty-' + id).value);
-    
-    // 🌟 رسالة لو مفيش رقم
-    if (isNaN(qty) || qty <= 0) {
-        return alert("⚠️ من فضلك حدد عدد الأسهم اللي عايز تشتريها الأول (اكتب رقم أو استخدم زرار +)");
-    }
-    
-    const cost = qty * currentPrices[id];
-    
-    // 🌟 رسالة لو الفلوس مش كفاية
-    if (cost > cash) {
-        return alert("❌ رصيدك غير كافٍ لإتمام عملية الشراء! إنت معاك $" + cash.toFixed(2) + " بس.");
-    } 
-    
-    cash -= cost;
-    portfolio[id] += qty;
-    updateUI();
-    document.getElementById('holds-' + id).textContent = portfolio[id];
-    saveScore();
-    saveProgress();
-};
-
-window.sell = function(id) {
-    const qty = parseInt(document.getElementById('qty-' + id).value);
-    
-    // 🌟 رسالة لو مفيش رقم
-    if (isNaN(qty) || qty <= 0) {
-        return alert("⚠️ من فضلك حدد عدد الأسهم اللي عايز تبيعها الأول (اكتب رقم أو استخدم زرار +)");
-    }
-    
-    // 🌟 رسالة لو بيبيع أكتر من اللي معاه
-    if (qty > portfolio[id]) {
-        return alert("❌ مش معاك العدد ده من الأسهم! إنت بتمتلك " + portfolio[id] + " سهم بس.");
-    }
-    
-    cash += qty * currentPrices[id];
-    portfolio[id] -= qty;
-    updateUI();
-    document.getElementById('holds-' + id).textContent = portfolio[id];
-    saveScore();
-    saveProgress();
-};
-
-let qtyTimer = null;
-let qtyHoldTimeout = null;
-
-window.startQtyChange = function(id, change) {
-    const input = document.getElementById('qty-' + id);
-    let val = parseInt(input.value) + change;
-    if (val < 0) val = 0;
-    if (change > 0) {
-        const max = Math.floor(cash / currentPrices[id]);
-        if (val > max) val = max;
-    }
-    input.value = val;
-
-    qtyHoldTimeout = setTimeout(() => {
-        qtyTimer = setInterval(() => {
-            let v = parseInt(input.value) + change;
-            if (v < 0) v = 0;
-            if (change > 0) {
-                const max = Math.floor(cash / currentPrices[id]);
-                if (v > max) v = max;
+        window.buy = function(id) {
+            const qty = parseInt(document.getElementById('qty-' + id).value);
+            
+            if (isNaN(qty) || qty <= 0) {
+                return alert("⚠️ من فضلك حدد عدد الأسهم اللي عايز تشتريها الأول (اكتب رقم أو استخدم زرار +)");
             }
-            input.value = v;
-        }, 50);
-    }, 1000);
-};
+            
+            const cost = qty * currentPrices[id];
+            
+            if (cost > cash) {
+                return alert("❌ رصيدك غير كافٍ لإتمام عملية الشراء! إنت معاك $" + cash.toFixed(2) + " بس.");
+            } 
+            
+            cash -= cost;
+            portfolio[id] += qty;
+            updateUI();
+            document.getElementById('holds-' + id).textContent = portfolio[id];
+            saveScore();
+            saveProgress();
+        };
 
-window.stopQtyChange = function() {
-    clearTimeout(qtyHoldTimeout);
-    if (qtyTimer) clearInterval(qtyTimer);
-    qtyTimer = null;
-    qtyHoldTimeout = null;
-};
+        window.sell = function(id) {
+            const qty = parseInt(document.getElementById('qty-' + id).value);
+            
+            if (isNaN(qty) || qty <= 0) {
+                return alert("⚠️ من فضلك حدد عدد الأسهم اللي عايز تبيعها الأول (اكتب رقم أو استخدم زرار +)");
+            }
+            
+            if (qty > portfolio[id]) {
+                return alert("❌ مش معاك العدد ده من الأسهم! إنت بتمتلك " + portfolio[id] + " سهم بس.");
+            }
+            
+            cash += qty * currentPrices[id];
+            portfolio[id] -= qty;
+            updateUI();
+            document.getElementById('holds-' + id).textContent = portfolio[id];
+            saveScore();
+            saveProgress();
+        };
 
-window.buy = function(id) {
-    const qty = parseInt(document.getElementById('qty-' + id).value);
-    if (isNaN(qty) || qty <= 0) return;
-    const cost = qty * currentPrices[id];
-    if (cost > cash) return; 
-    cash -= cost;
-    portfolio[id] += qty;
-    updateUI();
-    document.getElementById('holds-' + id).textContent = portfolio[id];
-    saveScore();
-    saveProgress();
-};
+        function updateUI() {
+            const stocksValue = Object.keys(portfolio).reduce((sum, id) => sum + (portfolio[id] * currentPrices[id]), 0);
+            const total = cash + stocksValue;
 
-window.sell = function(id) {
-    const qty = parseInt(document.getElementById('qty-' + id).value);
-    if (isNaN(qty) || qty <= 0) return;
-    if (qty > portfolio[id]) return;
-    cash += qty * currentPrices[id];
-    portfolio[id] -= qty;
-    updateUI();
-    document.getElementById('holds-' + id).textContent = portfolio[id];
-    saveScore();
-    saveProgress();
-};
+            document.getElementById('cashDisplay').textContent = '$' + cash.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('stocksValue').textContent = '$' + stocksValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('totalWealth').textContent = '$' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('roundNum').textContent = round;
+        }
 
-function updateUI() {
-    const stocksValue = Object.keys(portfolio).reduce((sum, id) => sum + (portfolio[id] * currentPrices[id]), 0);
-    const total = cash + stocksValue;
+        function getTotalWealth() {
+            let total = cash;
+            Object.keys(portfolio).forEach(id => total += portfolio[id] * currentPrices[id]);
+            return total;
+        }
 
-    document.getElementById('cashDisplay').textContent = '$' + cash.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    document.getElementById('stocksValue').textContent = '$' + stocksValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    document.getElementById('totalWealth').textContent = '$' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    document.getElementById('roundNum').textContent = round;
-}
-
-function getTotalWealth() {
-    let total = cash;
-    Object.keys(portfolio).forEach(id => total += portfolio[id] * currentPrices[id]);
-    return total;
-}
         window.nextRound = function() {
             const oldTotal = getTotalWealth();
 
@@ -548,7 +485,8 @@ function getTotalWealth() {
             });
 
             Object.keys(currentPrices).forEach(id => {
-                let baseChange = (Math.random() - 0.48) * 0.08;
+                // 🌟 احتمالية الخسارة أعلى (السوق مائل للهبوط)
+                let baseChange = (Math.random() - 0.60) * 0.12; 
                 let newsChange = effectMap[id] || 0;
                 let totalChange = baseChange + newsChange;
                 currentPrices[id] = Math.max(1, currentPrices[id] * (1 + totalChange));
@@ -605,7 +543,20 @@ function getTotalWealth() {
             document.getElementById('gameScreen').style.display = 'flex';
         };
 
-        window.showGameRules = function() { document.getElementById('rulesModal').classList.add('active'); };
+        window.showGameRules = function() { 
+            alert("🎮 كيفية اللعب:\n\n" +
+                  "1️⃣ اختر الدولة (مصر، اليابان، أمريكا) من الأزرار اللي فوق.\n" +
+                  "2️⃣ اقرأ الأخبار كويس عشان تعرف إيه اللي هيأثر على الأسعار.\n" +
+                  "3️⃣ حدد عدد الأسهم اللي عايز تشتريها (بزرار + أو اكتب الرقم).\n" +
+                  "4️⃣ دوس (شراء) عشان تشتري، أو (بيع) عشان تبيع اللي معاك.\n" +
+                  "5️⃣ لما تخلص، دوس (الجولة التالية) عشان تشوف كسبت كام أو خسرت كام.\n\n" +
+                  "💡 نصائح مهمة جداً:\n" +
+                  "- ⚠️ متحطش كل فلوسك في شركة واحدة، وزع المخاطر.\n" +
+                  "- 📰 اقرأ الأخبار السلبية قبل ما تشتري.\n" +
+                  "- 📉 السوق بيتحرك عشوائي، فممكن تخسر حتى لو الأخبار كويسة.\n" +
+                  "- 🏆 الهدف إنك توصل لأعلى ثروة وتتصدر لوحة الصدارة.\n\n" +
+                  "بالتوفيق يا بطل! 🚀");
+        };
 
         window.resetGame = async function() {
             if (!confirm('هل أنت متأكد؟ كل تقدمك هيت مسح!')) return;
@@ -649,3 +600,4 @@ function getTotalWealth() {
     </script>
 </body>
 </html>
+    

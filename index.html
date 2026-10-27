@@ -431,7 +431,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
+         // ✅ استيراد أدوات الإشعارات
+import { orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
         const firebaseConfig = {
             apiKey: "AIzaSyDe5INvR_ifEARHmw7M0qqBQ34-G6z4p7w",
             authDomain: "mansa-educational.firebaseapp.com",
@@ -444,6 +445,21 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+window.addNotification = async function(title, message, type = 'info', icon = '🔔') {
+    try {
+        await addDoc(collection(db, "notifications"), {
+            title: title,
+            message: message,
+            type: type,
+            icon: icon,
+            createdAt: Date.now()
+        });
+        console.log('✅ إشعار اتحفظ:', title);
+    } catch(e) {
+        console.error('❌ خطأ في حفظ الإشعار:', e);
+    }
+};
+        
         const SECRET_CODE = "01024897145";
         let isAdmin = false;
         let currentSubject = "";
@@ -796,13 +812,200 @@
         window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
 
         document.addEventListener('DOMContentLoaded', () => { 
-            checkUserSession(); 
-            document.getElementById('searchResults').innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
-            
-            setTimeout(() => {
-                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-            }, 1000);
+    checkUserSession(); 
+    document.getElementById('searchResults').innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
+    
+    setTimeout(() => {
+        try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+    }, 1000);
+
+    // ✅ تسجيل Service Worker
+    registerServiceWorker();
+});
+
+// ✅ تسجيل Service Worker
+function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+        console.log('❌ المتصفح مش بيدعم Service Worker');
+        return;
+    }
+
+    const swCode = `
+        const CACHE_NAME = 'bakaloria-v3';
+        const RUNTIME_CACHE = 'bakaloria-runtime-v3';
+        const PRECACHE_URLS = ['/', '/index.html', '/login.html', '/manifest.json', '/logo.png'];
+
+        self.addEventListener('install', (event) => {
+            event.waitUntil(
+                caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)).then(() => self.skipWaiting())
+            );
         });
+
+        self.addEventListener('activate', (event) => {
+            event.waitUntil(
+                caches.keys().then((names) => Promise.all(
+                    names.map((n) => { if (n !== CACHE_NAME && n !== RUNTIME_CACHE) return caches.delete(n); })
+                )).then(() => self.clients.claim())
+            );
+        });
+
+        self.addEventListener('fetch', (event) => {
+            const { request } = event;
+            const url = new URL(request.url);
+            if (!request.url.startsWith('http')) return;
+            if (url.hostname.includes('firebase') || url.hostname.includes('googleapis') || url.hostname.includes('gstatic') || url.hostname.includes('google.com') || url.hostname.includes('youtube.com')) return;
+
+            if (request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html')) {
+                event.respondWith(
+                    fetch(request).then((res) => {
+                        const clone = res.clone();
+                        caches.open(RUNTIME_CACHE).then((c) => c.put(request, clone));
+                        return res;
+                    }).catch(() => caches.match(request).then((c) => c || caches.match('/index.html')))
+                );
+                return;
+            }
+
+            event.respondWith(
+                caches.match(request).then((cached) => {
+                    if (cached) return cached;
+                    return fetch(request).then((res) => {
+                        if (res && res.status === 200) {
+                            const clone = res.clone();
+                            caches.open(RUNTIME_CACHE).then((c) => c.put(request, clone));
+                        }
+                        return res;
+                    }).catch(() => new Response('offline', { status: 503 }));
+                })
+            );
+        });
+
+        self.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+            if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
+                const { title, body, icon } = event.data;
+                self.registration.showNotification(title, {
+                    body: body,
+                    icon: icon || '/logo.png',
+                    badge: '/logo.png',
+                    vibrate: [200, 100, 200],
+                    tag: 'bakaloria-notif'
+                });
+            }
+        });
+
+        self.addEventListener('notificationclick', (event) => {
+            event.notification.close();
+            event.waitUntil(
+                clients.matchAll({ type: 'window' }).then((list) => {
+                    for (const client of list) {
+                        if (client.url.includes('/index.html') && 'focus' in client) return client.focus();
+                    }
+                    if (clients.openWindow) return clients.openWindow('/index.html');
+                })
+            );
+        });
+    `;
+
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+
+    navigator.serviceWorker.register(swUrl)
+        .then((reg) => {
+            console.log('✅ SW registered:', reg.scope);
+            setTimeout(checkNotificationPermission, 3000);
+        })
+        .catch((err) => console.error('❌ SW failed:', err));
+}
+
+// ✅ طلب إذن الإشعارات (بعد التثبيت)
+async function checkNotificationPermission() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    if (!isStandalone) {
+        console.log('ℹ️ التطبيق مش متثبت — الإشعارات هتتفعل بعد التثبيت');
+        return;
+    }
+
+    if (!('Notification' in window)) {
+        console.log('❌ المتصفح مش بيدعم الإشعارات');
+        return;
+    }
+
+    if (localStorage.getItem('notif_asked') === 'true') {
+        if (Notification.permission === 'granted') startNotificationWatcher();
+        return;
+    }
+
+    try {
+        const permission = await Notification.requestPermission();
+        localStorage.setItem('notif_asked', 'true');
+
+        if (permission === 'granted') {
+            console.log('✅ الإشعارات اتفعلت');
+            showLocalNotification('🎉 مبروك!', 'تم تفعيل الإشعارات — هتوصلك كل الأخبار الجديدة');
+            startNotificationWatcher();
+        }
+    } catch(e) {
+        console.error('خطأ في طلب الإذن:', e);
+    }
+}
+
+// ✅ إظهار إشعار على الجهاز
+async function showLocalNotification(title, body) {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    try {
+        const reg = await navigator.serviceWorker.ready;
+        await reg.showNotification(title, {
+            body: body,
+            icon: '/logo.png',
+            badge: '/logo.png',
+            vibrate: [200, 100, 200],
+            tag: 'bakaloria-notif'
+        });
+    } catch(e) {
+        console.error('خطأ في الإشعار:', e);
+    }
+}
+
+// ✅ مراقبة الإشعارات الجديدة
+let lastNotifCheck = parseInt(localStorage.getItem('last_notif_check') || Date.now().toString());
+let notificationWatcherInterval = null;
+
+function startNotificationWatcher() {
+    if (notificationWatcherInterval) return;
+    console.log('👀 بدء مراقبة الإشعارات');
+
+    notificationWatcherInterval = setInterval(async () => {
+        if (Notification.permission !== 'granted') return;
+
+        try {
+            const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"), limit(5));
+            const snap = await getDocs(q);
+            const newNotifs = [];
+            snap.forEach(d => {
+                const data = d.data();
+                if (data.createdAt > lastNotifCheck) newNotifs.push(data);
+            });
+
+            newNotifs.reverse().forEach(n => {
+                showLocalNotification(`${n.icon || '🔔'} ${n.title || 'إشعار'}`, n.message || '');
+            });
+
+            if (newNotifs.length > 0) {
+                lastNotifCheck = Date.now();
+                localStorage.setItem('last_notif_check', lastNotifCheck.toString());
+            }
+        } catch(e) {
+            console.error('خطأ في check:', e);
+        }
+    }, 30000);
+}
+
+// ✅ بدء المراقبة لو الإذن موجود
+if (Notification.permission === 'granted') {
+    startNotificationWatcher();
+}
 
         let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -985,6 +1188,5 @@ function getSubjectFile(subject) {
     return map[subject] || 'Arabic.html';
 }
     </script>
-    <script type="module" src="push-notifications.js"></script>
 </body>
 </html>

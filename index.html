@@ -68,7 +68,6 @@
         .home-hero h2 { font-size: 32px; font-weight: 900; color: var(--text); margin-bottom: 10px; }
         .home-hero p { font-size: 16px; color: var(--muted); max-width: 600px; margin: 0 auto; line-height: 1.6; }
         
-        /* 🌟 زرار "تعلم أكثر" */
         .learn-more-link { display: inline-block; margin-top: 10px; font-size: 16px; font-weight: bold; color: #3b82f6; cursor: pointer; text-decoration: underline; transition: 0.2s; }
         .learn-more-link:hover { color: #2563eb; }
 
@@ -126,7 +125,6 @@
         .loading { text-align: center; padding: 30px; color: #4f46e5; font-weight: bold; display: none; }
         .empty-msg { text-align: center; padding: 40px; color: var(--muted); font-size: 18px; background: var(--card); border-radius: 20px; border: 1px dashed var(--border); }
 
-        /* تعديل الفوتر */
         .main-footer { 
             text-align: center; padding: 20px; background: var(--card); border-top: 1px solid var(--border); margin-top: auto; 
             flex: 1; display: flex; flex-direction: column; justify-content: flex-end; min-height: 120px;
@@ -134,7 +132,6 @@
         .footer-contact-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--text); text-decoration: none; padding: 8px 20px; border-radius: 50px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; transition: 0.3s; }
         .footer-contact-btn:hover { border-color: #10b981; color: #10b981; transform: translateY(-2px); }
         
-        /* تنسيق صفحة الحساب */
         .profile-card { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 20px; }
         .profile-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
         .profile-avatar { width: 60px; height: 60px; background: var(--accent); color: #fff; border-radius: 50%; display: grid; place-items: center; font-size: 30px; }
@@ -142,7 +139,6 @@
         .profile-info p { font-size: 14px; color: var(--muted); }
         .profile-form { display: flex; flex-direction: column; gap: 10px; }
 
-        /* تنسيق صفحة عن المنصة */
         .about-text { line-height: 2; font-size: 17px; color: var(--text); }
         body.dark .about-text { color: #e2e8f0; }
         .about-text h2 { color: var(--accent); margin-bottom: 20px; }
@@ -155,29 +151,14 @@
 </head>
 <body>
     <script>
-    // 🌟 كود تحويل الروابط القديمة عشان محدش يضحك على حد
     const currentPath = window.location.pathname;
     
-    // لو حد دخل على اللينك القديم اللي فيه .saher
-    if (currentPath.includes('/.saher')) {
-        window.location.replace('https://saher254.github.io/');
-    }
-    
-    // لو حد دخل على اللينك القديم بتاع .com
-    if (currentPath.includes('/.com')) {
-        window.location.replace('https://saher254.github.io/');
-    }
-
-    // لو حد دخل على اللينك القديم بتاع Learn
-    if (currentPath.includes('/Learn')) {
-        window.location.replace('https://saher254.github.io/');
-    }
-
-    // 🌟 ضيف السطرين دول للينك الجديد بتاع JavaScript-
-    if (currentPath.includes('/JavaScript-') || currentPath.includes('/JavaScript')) {
-        window.location.replace('https://saher254.github.io/');
-    }
+    if (currentPath.includes('/.saher')) window.location.replace('https://saher254.github.io/');
+    if (currentPath.includes('/.com')) window.location.replace('https://saher254.github.io/');
+    if (currentPath.includes('/Learn')) window.location.replace('https://saher254.github.io/');
+    if (currentPath.includes('/JavaScript-') || currentPath.includes('/JavaScript')) window.location.replace('https://saher254.github.io/');
     </script>
+    
     <header class="main-header" id="mainHeader">
         <h1 onclick="showPage('home')">🎓 منصة البكالوريا</h1>
         <div class="header-actions">
@@ -190,7 +171,6 @@
 
     <div id="userBar">
         <div class="user-info">
-            <!-- 🌟 ضفنا علامة 👤 هنا -->
             <span id="welcomeText" class="user-name" onclick="showPage('profile')">
                 👤 👋 أهلاً بك
             </span>
@@ -206,7 +186,6 @@
         <div class="home-hero">
             <h2>مرحباً بك في منصة البكالوريا 🚀</h2>
             <p>بوابتك الشاملة لجميع المواد الدراسية. ابدأ رحلة التفوق والتميز الآن مع أفضل الشروحات والملخصات التعليمية، كل ما تحتاجه في مكان واحد!</p>
-            <!-- 🌟 ضفنا لينك "تعلم أكثر" هنا -->
             <span class="learn-more-link" onclick="showPage('about')">تعلم أكثر عن المنصة ←</span>
         </div>
 
@@ -238,7 +217,6 @@
             <div class="subject-card" onclick="window.location.href='money.html'">
                  <h2>📈 المنصة المالية (محاكي التداول)</h2><span class="arrow">⬅️</span>
             </div>
-            <!-- 🌟 شيلنا زرار "عن المنصة" من هنا -->
         </div>
 
         <div style="text-align: center; margin: 0 auto 20px; max-width: 800px; padding: 0 20px;">
@@ -290,7 +268,7 @@
     </div>
 </div>
 
-<!-- 🌟 صفحة الحساب الشخصي -->
+<!-- صفحة الحساب الشخصي -->
 <div id="page-profile" class="page">
     <div class="page-header">
         <button class="back-btn" onclick="showPage('home')">🔙 رجوع</button>
@@ -326,18 +304,20 @@
     </div>
 </div>
 
-<!-- 🌟 صفحة عن المنصة (بالنص الطويل والممتع) -->
+<!-- صفحة عن المنصة -->
 <div id="page-about" class="page">
     <div class="page-header">
         <button class="back-btn" onclick="showPage('home')">🔙 رجوع</button>
         <h2 class="page-title">عن المنصة</h2>
     </div>
     
-    <div class="content-area">
-        <div class="content-item about-text">
+    <div class="content-area about-text">
+        <div class="content-item" style="padding: 30px;">
             <h2>🎓 منصة البكالوريا التعليمية - ساهر</h2>
+            <p>أهلاً بك في <b>منصتك التعليمية الشاملة</b>، المكان اللي بيجمع كل اللي محتاجه طالب تانية بكالوريا في مكان واحد، وبطريقة سهلة ومريحة للعين.</p>
+            <p>المنصة دي اتصممت عشان تكون رفيقك في رحلة التفوق، مش مجرد موقع بيقدم دروس وخلاص.</p>
             
-            <p>أهلاً بك في <b>منصتك التعليمية الشاملة</b>، المكان اللي بيجمع كل اللي محتاجه طالب تانية بكالوريا في مكان واحد، وبطريقة سهلة ومريحة للعين. المنصة دي اتصممت عشان تكون رفيقك في رحلة التفوق، مش مجرد موقع بيقدم دروس وخلاص.</p>
+            <hr style="margin: 20px 0; border-color: var(--border);">
             
             <h3>🌟 إيه اللي بيميز منصتنا؟</h3>
             <ul>
@@ -349,18 +329,24 @@
                 <li>🆓 <b>مجانية بالكامل:</b> كل المحتوى والامتحانات متاحة لجميع الطلاب بدون أي رسوم أو اشتراكات.</li>
             </ul>
 
+            <hr style="margin: 20px 0; border-color: var(--border);">
+
             <h3>🛠️ إزاي تبدأ تستخدم المنصة؟</h3>
-            <ol>
-                <li><b>سجل دخولك:</b> أول ما تفتح المنصة، هتحتاج تسجل اسمك (أو تدخل بحسابك لو مسجل قبل كده).</li>
-                <li><b>اختر مادتك:</b> من الصفحة الرئيسية، هتلاقي أيقونات لكل المواد، دوس على المادة اللي عايز تذاكرها.</li>
+            <ol style="padding-right: 20px; margin-bottom: 20px;">
+                <li><b>سجل دخولك:</b> أول ما تفتح المنصة، هتحتاج تسجل اسمك.</li>
+                <li><b>اختر مادتك:</b> من الصفحة الرئيسية، هتلاقي أيقونات لكل المواد.</li>
                 <li><b>تصفح المحتوى:</b> هتلاقي الشروحات والملخصات والملفات جاهزة ومقسمة بشكل منظم.</li>
-                <li><b>اختبر نفسك:</b> في آخر الصفحة الرئيسية، هتلاقي زرار "اختبر نفسك"، ادخل وجرب تحل الامتحانات وشوف مستواك.</li>
-                <li><b>تابع نتايجك:</b> دوس على زرار "📊 نتائجي" عشان تشوف كل الامتحانات اللي حليتها ودرجاتك فيها.</li>
+                <li><b>اختبر نفسك:</b> في آخر الصفحة الرئيسية، هتلاقي زرار "اختبر نفسك".</li>
+                <li><b>تابع نتايجك:</b> دوس على "حسابي" عشان تشوف كل الامتحانات اللي حليتها ودرجاتك فيها.</li>
             </ol>
 
+            <hr style="margin: 20px 0; border-color: var(--border);">
+
             <h3>👑 للتواصل والدعم</h3>
-            <p>المنصة دي اتعملت بكل حب عشان تساعدك تتفوق. لو محتاج أي مساعدة، أو عندك أي استفسار، أو حتى لو حابب تقترح حاجة جديدة، أنا موجود دايماً.</p>
+            <p>المنصة دي اتعملت بكل حب عشان تساعدك تتفوق. لو محتاج أي مساعدة، أو عندك أي استفسار، أنا موجود دايماً.</p>
             <p><b>للتواصل:</b> 📞 <a href="tel:01024897145" style="color: var(--accent); font-weight: bold;">01024897145</a></p>
+
+            <hr style="margin: 20px 0; border-color: var(--border);">
 
             <h3>💡 كلمة أخيرة</h3>
             <p>إحنا هنا عشان نسهل عليك، ونخلي المذاكرة تجربة ممتعة ومثمرة. كل اللي عليك هو إنك تبدأ، وتستمر، وتفتكر دايماً إن <b>"مَعًا نحو مستقبلك"</b>. 🎓✨</p>
@@ -371,7 +357,6 @@
         </div>
     </div>
 </div>
-
 <!-- المودالات -->
 <div id="adminLoginModal" class="modal">
     <div class="modal-content">
@@ -416,7 +401,6 @@
     </div>
 </div>
 
-<!-- نافذة تثبيت التطبيق المخصصة -->
 <div id="installAppModal" class="modal" style="z-index: 9999;">
     <div class="modal-content" style="text-align: center; max-width: 350px;">
         <div style="font-size: 50px; margin-bottom: 10px;">🎓</div>
@@ -428,205 +412,203 @@
         </div>
     </div>
 </div>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-         // ✅ استيراد أدوات الإشعارات
-import { orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-        const firebaseConfig = {
-            apiKey: "AIzaSyDe5INvR_ifEARHmw7M0qqBQ34-G6z4p7w",
-            authDomain: "mansa-educational.firebaseapp.com",
-            projectId: "mansa-educational",
-            storageBucket: "mansa-educational.firebasestorage.app",
-            messagingSenderId: "144298769750",
-            appId: "1:144298769750:web:43eb0c63e5d2acb37baaf7"
-        };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-window.addNotification = async function(title, message, type = 'info', icon = '🔔') {
-    try {
-        await addDoc(collection(db, "notifications"), {
-            title: title,
-            message: message,
-            type: type,
-            icon: icon,
-            createdAt: Date.now()
-        });
-        console.log('✅ إشعار اتحفظ:', title);
-    } catch(e) {
-        console.error('❌ خطأ في حفظ الإشعار:', e);
-    }
-};
+    const firebaseConfig = {
+        apiKey: "AIzaSyDe5INvR_ifEARHmw7M0qqBQ34-G6z4p7w",
+        authDomain: "mansa-educational.firebaseapp.com",
+        projectId: "mansa-educational",
+        storageBucket: "mansa-educational.firebasestorage.app",
+        messagingSenderId: "144298769750",
+        appId: "1:144298769750:web:43eb0c63e5d2acb37baaf7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ✅ دالة إضافة إشعار
+    window.addNotification = async function(title, message, type = 'info', icon = '🔔') {
+        try {
+            await addDoc(collection(db, "notifications"), {
+                title: title,
+                message: message,
+                type: type,
+                icon: icon,
+                createdAt: Date.now()
+            });
+            console.log('✅ إشعار اتحفظ:', title);
+        } catch(e) {
+            console.error('❌ خطأ في حفظ الإشعار:', e);
+        }
+    };
+    
+    const SECRET_CODE = "01024897145";
+    let isAdmin = false;
+    let currentSubject = "";
+    let currentItems = [];
+    let editingItemId = null;
+    let currentUser = null;
+
+    const subjectsData = [
+        { title: '📖 مادة العربي', file: 'Arabic.html' },
+        { title: '💻 مادة البرمجة', file: 'programming.html' },
+        { title: '🇬🇧 مادة الإنجليزي', file: 'English.html' },
+        { title: '🏛️ مادة التاريخ', file: 'History.html' },
+        { title: '🚀 منصة جافا سكريبت للتعلم مجاناً', file: 'javascript.html' },
+        { title: 'اسئله لجميع المواد', file: 'quiz' },
+        { title: '📝 اختبر نفسك (الاختبار الشامل)', file: 'test.html' }
+    ];
+
+    window.performSearch = function() {
+        const term = document.getElementById('searchInput').value.trim().toLowerCase();
+        const resultsDiv = document.getElementById('searchResults');
         
-        const SECRET_CODE = "01024897145";
-        let isAdmin = false;
-        let currentSubject = "";
-        let currentItems = [];
-        let editingItemId = null;
-        let currentUser = null;
-
-        const subjectsData = [
-            { title: '📖 مادة العربي', file: 'Arabic.html' },
-            { title: '💻 مادة البرمجة', file: 'programming.html' },
-            { title: '🇬🇧 مادة الإنجليزي', file: 'English.html' },
-            { title: '🏛️ مادة التاريخ', file: 'History.html' },
-            { title: '🚀 منصة جافا سكريبت للتعلم مجاناً', file: 'javascript.html' },
-            { title: 'اسئله لجميع المواد', file: 'quiz' },
-            { title: '📝 اختبر نفسك (الاختبار الشامل)', file: 'test.html' }
-        ];
-
-        window.performSearch = function() {
-            const term = document.getElementById('searchInput').value.trim().toLowerCase();
-            const resultsDiv = document.getElementById('searchResults');
-            
-            if (!term) {
-                resultsDiv.innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
-                return;
-            }
-            const matches = subjectsData.filter(sub => sub.title.toLowerCase().includes(term));
-            if (matches.length === 0) {
-                resultsDiv.innerHTML = '<p style="text-align:center; color:var(--danger); font-weight:bold;">لا توجد نتائج.</p>';
-                return;
-            }
-            resultsDiv.innerHTML = matches.map(sub => `
-                <div class="subject-card" onclick="${sub.file === 'quiz' ? `openSubject('quiz', '${sub.title}')` : `openEmbedded('${sub.file}', '${sub.title}')`}">
-                    <h2>${sub.title}</h2><span class="arrow">⬅️</span>
-                </div>
-            `).join('');
-        };
-
-        window.toggleSearch = function() {
-            const searchPage = document.getElementById('page-search');
-            if (searchPage.classList.contains('active')) { showPage('home'); } else { showPage('search'); }
-        };
-
-        function checkUserSession() {
-            const userStr = localStorage.getItem('bakaloria_user');
-            if (!userStr) {
-                window.location.href = 'login.html';
-                return; 
-            }
-            currentUser = JSON.parse(userStr);
-            const userBar = document.getElementById('userBar');
-            const welcomeText = document.getElementById('welcomeText');
-            const adminBadge = document.getElementById('adminBadge');
-
-            // 🌟 ضفنا 👤 هنا
-            welcomeText.innerHTML = '👤 👋 أهلاً، ' + currentUser.username;
-            userBar.style.display = 'flex';
-
-            if (currentUser.role === 'admin') {
-                adminBadge.style.display = 'inline-block';
-                isAdmin = true; 
-                localStorage.setItem('bakaloria_admin', 'true');
-            } else {
-                isAdmin = false;
-                localStorage.removeItem('bakaloria_admin');
-            }
-            updateAdminUI();
+        if (!term) {
+            resultsDiv.innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
+            return;
         }
-
-        window.confirmLogout = function() {
-            if (confirm("هل تريد تسجيل الخروج؟")) {
-                localStorage.removeItem('bakaloria_user');
-                localStorage.removeItem('bakaloria_admin');
-                window.location.href = 'login.html';
-            }
-        };
-
-        const clickSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
-        clickSound.volume = 0.4;
-
-        let themeClicks = 0;
-        let clickTimer = null;
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('.icon');
-        const mainHeader = document.getElementById('mainHeader');
-
-        if (localStorage.getItem('bakaloria_theme') === 'dark') {
-            document.body.classList.add('dark');
-            themeIcon.textContent = '☀️';
+        const matches = subjectsData.filter(sub => sub.title.toLowerCase().includes(term));
+        if (matches.length === 0) {
+            resultsDiv.innerHTML = '<p style="text-align:center; color:var(--danger); font-weight:bold;">لا توجد نتائج.</p>';
+            return;
         }
+        resultsDiv.innerHTML = matches.map(sub => `
+            <div class="subject-card" onclick="${sub.file === 'quiz' ? `openSubject('quiz', '${sub.title}')` : `openEmbedded('${sub.file}', '${sub.title}')`}">
+                <h2>${sub.title}</h2><span class="arrow">⬅️</span>
+            </div>
+        `).join('');
+    };
 
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            const isDark = document.body.classList.contains('dark');
-            themeIcon.textContent = isDark ? '☀️' : '🌙';
-            localStorage.setItem('bakaloria_theme', isDark ? 'dark' : 'light');
+    window.toggleSearch = function() {
+        const searchPage = document.getElementById('page-search');
+        if (searchPage.classList.contains('active')) { showPage('home'); } else { showPage('search'); }
+    };
 
-            themeClicks++;
-            clearTimeout(clickTimer);
-            clickTimer = setTimeout(() => { themeClicks = 0; }, 2000);
+    function checkUserSession() {
+        const userStr = localStorage.getItem('bakaloria_user');
+        if (!userStr) {
+            window.location.href = 'login.html';
+            return; 
+        }
+        currentUser = JSON.parse(userStr);
+        const userBar = document.getElementById('userBar');
+        const welcomeText = document.getElementById('welcomeText');
+        const adminBadge = document.getElementById('adminBadge');
 
-            if (themeClicks >= 10) {
-                themeClicks = 0;
-                if (isAdmin) logoutAdmin();
-                else openModal('adminLoginModal');
-            }
-        });
+        welcomeText.innerHTML = '👤 👋 أهلاً، ' + currentUser.username;
+        userBar.style.display = 'flex';
 
-        window.checkAdminCode = function() {
-            const val = document.getElementById('adminCodeInput').value.trim();
-            if (val && val === SECRET_CODE) {
-                isAdmin = true;
-                localStorage.setItem('bakaloria_admin', 'true');
-                closeModal('adminLoginModal');
-                document.getElementById('adminCodeInput').value = '';
-                updateAdminUI();
-                alert('✅ تم تفعيل وضع المدير');
-            } else { alert('❌ الكود غير صحيح'); }
-        };
-
-        window.logoutAdmin = function() {
-            if (!confirm('هل تريد الخروج من وضع المدير؟')) return;
+        if (currentUser.role === 'admin') {
+            adminBadge.style.display = 'inline-block';
+            isAdmin = true; 
+            localStorage.setItem('bakaloria_admin', 'true');
+        } else {
             isAdmin = false;
             localStorage.removeItem('bakaloria_admin');
-            updateAdminUI();
-        };
+        }
+        updateAdminUI();
+    }
 
-        function updateAdminUI() {
-            document.getElementById('adminBar').style.display = isAdmin ? 'flex' : 'none';
-            document.getElementById('addContentBtn').style.display = isAdmin ? 'flex' : 'none';
-            if (currentSubject) renderSubjectContent();
+    window.confirmLogout = function() {
+        if (confirm("هل تريد تسجيل الخروج؟")) {
+            localStorage.removeItem('bakaloria_user');
+            localStorage.removeItem('bakaloria_admin');
+            window.location.href = 'login.html';
+        }
+    };
+
+    const clickSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
+    clickSound.volume = 0.4;
+
+    let themeClicks = 0;
+    let clickTimer = null;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('.icon');
+    const mainHeader = document.getElementById('mainHeader');
+
+    if (localStorage.getItem('bakaloria_theme') === 'dark') {
+        document.body.classList.add('dark');
+        themeIcon.textContent = '☀️';
+    }
+
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        const isDark = document.body.classList.contains('dark');
+        themeIcon.textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('bakaloria_theme', isDark ? 'dark' : 'light');
+
+        themeClicks++;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => { themeClicks = 0; }, 2000);
+
+        if (themeClicks >= 10) {
+            themeClicks = 0;
+            if (isAdmin) logoutAdmin();
+            else openModal('adminLoginModal');
+        }
+    });
+
+    window.checkAdminCode = function() {
+        const val = document.getElementById('adminCodeInput').value.trim();
+        if (val && val === SECRET_CODE) {
+            isAdmin = true;
+            localStorage.setItem('bakaloria_admin', 'true');
+            closeModal('adminLoginModal');
+            document.getElementById('adminCodeInput').value = '';
+            updateAdminUI();
+            alert('✅ تم تفعيل وضع المدير');
+        } else { alert('❌ الكود غير صحيح'); }
+    };
+
+    window.logoutAdmin = function() {
+        if (!confirm('هل تريد الخروج من وضع المدير؟')) return;
+        isAdmin = false;
+        localStorage.removeItem('bakaloria_admin');
+        updateAdminUI();
+    };
+
+    function updateAdminUI() {
+        document.getElementById('adminBar').style.display = isAdmin ? 'flex' : 'none';
+        document.getElementById('addContentBtn').style.display = isAdmin ? 'flex' : 'none';
+        if (currentSubject) renderSubjectContent();
+    }
+
+    window.showPage = function(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + pageId).classList.add('active');
+        
+        if (pageId === 'home' || pageId === 'search' || pageId === 'profile' || pageId === 'about') {
+            mainHeader.style.display = 'flex';
+            const hasUser = localStorage.getItem('bakaloria_user');
+            document.getElementById('userBar').style.display = hasUser ? 'flex' : 'none';
+        } else {
+            mainHeader.style.display = 'none';
+            document.getElementById('userBar').style.display = 'none';
+        }
+        
+        if (pageId === 'search') {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
+            setTimeout(() => document.getElementById('searchInput').focus(), 100);
         }
 
-        window.showPage = function(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + pageId).classList.add('active');
-            
-            if (pageId === 'home' || pageId === 'search' || pageId === 'profile' || pageId === 'about') {
-                mainHeader.style.display = 'flex';
-                const hasUser = localStorage.getItem('bakaloria_user');
-                document.getElementById('userBar').style.display = hasUser ? 'flex' : 'none';
-            } else {
-                mainHeader.style.display = 'none';
-                document.getElementById('userBar').style.display = 'none';
-            }
-            
-            if (pageId === 'search') {
-                document.getElementById('searchInput').value = '';
-                document.getElementById('searchResults').innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
-                setTimeout(() => document.getElementById('searchInput').focus(), 100);
-            }
+        if (pageId === 'profile') {
+            loadProfilePage();
+        }
 
-            if (pageId === 'profile') {
-                loadProfilePage();
-            }
-
-            if (pageId === 'home') {
-                setTimeout(() => {
-                    try {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    } catch(e) { console.log('Ad error'); }
-                }, 500);
-            }
-            
-            window.scrollTo(0, 0);
-        };
-
-        window.openEmbedded = function(fileName, title) {
+        if (pageId === 'home') {
+            setTimeout(() => {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) { console.log('Ad error'); }
+            }, 500);
+        }
+        
+        window.scrollTo(0, 0);
+    };
+            window.openEmbedded = function(fileName, title) {
             clickSound.play().catch(e => console.log("الصوت اتمنع"));
             const frame = document.getElementById('embeddedFrame');
             frame.src = fileName; 
@@ -761,19 +743,81 @@ window.addNotification = async function(title, message, type = 'info', icon = '�
                 const q = query(collection(db, "exam_results"), where("userId", "==", currentUser.id));
                 const snapshot = await getDocs(q);
                 
+                let rankInfo = null;
+                try {
+                    const lbSnap = await getDocs(collection(db, "leaderboard"));
+                    const players = [];
+                    lbSnap.forEach(d => {
+                        const data = d.data();
+                        players.push({
+                            userId: data.userId,
+                            name: data.name,
+                            wealth: data.wealth || 0,
+                            round: data.round || 1
+                        });
+                    });
+                    players.forEach(p => {
+                        const roundPenalty = 1 - (p.round * 0.02);
+                        p.score = p.wealth * Math.max(roundPenalty, 0.5);
+                    });
+                    players.sort((a, b) => b.score - a.score);
+                    const myIndex = players.findIndex(p => p.userId === currentUser.id);
+                    if (myIndex !== -1) {
+                        rankInfo = {
+                            rank: myIndex + 1,
+                            total: players.length,
+                            score: players[myIndex].score,
+                            wealth: players[myIndex].wealth,
+                            round: players[myIndex].round
+                        };
+                    }
+                } catch(e) { console.error('Leaderboard rank error:', e); }
+
+                let html = '';
+
+                if (rankInfo) {
+                    const rankColor = rankInfo.rank === 1 ? '#ffd700' : rankInfo.rank === 2 ? '#c0c0c0' : rankInfo.rank === 3 ? '#cd7f32' : '#4f46e5';
+                    const medal = rankInfo.rank === 1 ? '🥇' : rankInfo.rank === 2 ? '🥈' : rankInfo.rank === 3 ? '🥉' : '🏆';
+                    html += `
+                        <div class="stats-card" style="border: 2px solid ${rankColor}; background: linear-gradient(135deg, rgba(79,70,229,0.05), rgba(79,70,229,0.15)); margin-bottom: 15px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="color: ${rankColor}; font-size: 18px;">${medal} مركزك في لوحة الصدارة</h3>
+                                <p style="font-size: 13px; color: var(--muted); margin-top: 5px;">
+                                    💰 الثروة: $${rankInfo.wealth.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} · 
+                                    🔄 الجولات: ${rankInfo.round} · 
+                                    ⭐ النقاط: ${rankInfo.score.toFixed(0)}
+                                </p>
+                            </div>
+                            <div style="color: ${rankColor}; font-size: 28px; font-weight: 900;">
+                                ${rankInfo.rank} <span style="font-size: 14px; color: var(--muted);">/ ${rankInfo.total}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="stats-card" style="border: 2px dashed var(--border); background: transparent; margin-bottom: 15px; padding: 15px; border-radius: 12px;">
+                            <h3 style="color: var(--muted); font-size: 16px;">🏆 مركزك في لوحة الصدارة</h3>
+                            <p style="font-size: 13px; color: var(--muted); margin-top: 5px;">لم تلعب محاكي التداول بعد — ابدأ اللعب لتظهر في لوحة الصدارة!</p>
+                        </div>
+                    `;
+                }
+
                 if (snapshot.empty) {
-                    resultsDiv.innerHTML = '<p style="text-align:center; color: var(--muted);">لم تحل أي امتحانات حتى الآن.</p>';
+                    html += '<p style="text-align:center; color: var(--muted); margin-top: 15px;">لم تحل أي امتحانات حتى الآن.</p>';
                 } else {
                     const results = [];
                     snapshot.forEach(doc => results.push(doc.data()));
                     results.sort((a,b) => b.timestamp - a.timestamp);
                     
-                    resultsDiv.innerHTML = results.map(item => {
+                    html += '<h3 style="font-size: 16px; color: var(--text); margin: 20px 0 10px;">📝 نتائج الامتحانات</h3>';
+                    html += results.map(item => {
                         const percentage = (item.score / item.total) * 100;
                         const scoreClass = percentage >= 50 ? '' : 'bad';
-                        return `<div class="stats-card"><div><h3>${item.examTitle}</h3><p style="font-size:12px; color:var(--muted); margin-top:5px;">${item.date}</p></div><div class="score ${scoreClass}">${item.score} / ${item.total}</div></div>`;
+                        return `<div class="stats-card" style="padding: 15px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;"><div><h3>${item.examTitle}</h3><p style="font-size:12px; color:var(--muted); margin-top:5px;">${item.date}</p></div><div style="color: ${percentage >= 50 ? 'var(--success)' : 'var(--danger)'}; font-weight: bold; font-size: 18px;">${item.score} / ${item.total}</div></div>`;
                     }).join('');
                 }
+
+                resultsDiv.innerHTML = html;
             } catch (e) {
                 resultsDiv.innerHTML = '<p style="color:red; text-align:center;">حدث خطأ في تحميل النتائج.</p>';
             }
@@ -797,7 +841,6 @@ window.addNotification = async function(title, message, type = 'info', icon = '�
                 currentUser.username = newName;
                 localStorage.setItem('bakaloria_user', JSON.stringify(currentUser));
                 
-                // 🌟 ضفنا 👤 هنا برضه
                 document.getElementById('welcomeText').innerHTML = '👤 👋 أهلاً، ' + newName;
                 document.getElementById('profileName').textContent = newName;
                 document.getElementById('newPassword').value = '';
@@ -812,218 +855,23 @@ window.addNotification = async function(title, message, type = 'info', icon = '�
         window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
 
         document.addEventListener('DOMContentLoaded', () => { 
-    checkUserSession(); 
-    document.getElementById('searchResults').innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
-    
-    setTimeout(() => {
-        try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-    }, 1000);
-
-    // ✅ تسجيل Service Worker
-    registerServiceWorker();
-});
-
-// ✅ تسجيل Service Worker
-function registerServiceWorker() {
-    if (!('serviceWorker' in navigator)) {
-        console.log('❌ المتصفح مش بيدعم Service Worker');
-        return;
-    }
-
-    const swCode = `
-        const CACHE_NAME = 'bakaloria-v3';
-        const RUNTIME_CACHE = 'bakaloria-runtime-v3';
-        const PRECACHE_URLS = ['/', '/index.html', '/login.html', '/manifest.json', '/logo.png'];
-
-        self.addEventListener('install', (event) => {
-            event.waitUntil(
-                caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)).then(() => self.skipWaiting())
-            );
+            checkUserSession(); 
+            document.getElementById('searchResults').innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
+            
+            setTimeout(() => {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            }, 1000);
         });
 
-        self.addEventListener('activate', (event) => {
-            event.waitUntil(
-                caches.keys().then((names) => Promise.all(
-                    names.map((n) => { if (n !== CACHE_NAME && n !== RUNTIME_CACHE) return caches.delete(n); })
-                )).then(() => self.clients.claim())
-            );
-        });
-
-        self.addEventListener('fetch', (event) => {
-            const { request } = event;
-            const url = new URL(request.url);
-            if (!request.url.startsWith('http')) return;
-            if (url.hostname.includes('firebase') || url.hostname.includes('googleapis') || url.hostname.includes('gstatic') || url.hostname.includes('google.com') || url.hostname.includes('youtube.com')) return;
-
-            if (request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html')) {
-                event.respondWith(
-                    fetch(request).then((res) => {
-                        const clone = res.clone();
-                        caches.open(RUNTIME_CACHE).then((c) => c.put(request, clone));
-                        return res;
-                    }).catch(() => caches.match(request).then((c) => c || caches.match('/index.html')))
-                );
-                return;
-            }
-
-            event.respondWith(
-                caches.match(request).then((cached) => {
-                    if (cached) return cached;
-                    return fetch(request).then((res) => {
-                        if (res && res.status === 200) {
-                            const clone = res.clone();
-                            caches.open(RUNTIME_CACHE).then((c) => c.put(request, clone));
-                        }
-                        return res;
-                    }).catch(() => new Response('offline', { status: 503 }));
-                })
-            );
-        });
-
-        self.addEventListener('message', (event) => {
-            if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
-            if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
-                const { title, body, icon } = event.data;
-                self.registration.showNotification(title, {
-                    body: body,
-                    icon: icon || '/logo.png',
-                    badge: '/logo.png',
-                    vibrate: [200, 100, 200],
-                    tag: 'bakaloria-notif'
-                });
-            }
-        });
-
-        self.addEventListener('notificationclick', (event) => {
-            event.notification.close();
-            event.waitUntil(
-                clients.matchAll({ type: 'window' }).then((list) => {
-                    for (const client of list) {
-                        if (client.url.includes('/index.html') && 'focus' in client) return client.focus();
-                    }
-                    if (clients.openWindow) return clients.openWindow('/index.html');
-                })
-            );
-        });
-    `;
-
-    const blob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(blob);
-
-    navigator.serviceWorker.register(swUrl)
-        .then((reg) => {
-            console.log('✅ SW registered:', reg.scope);
-            setTimeout(checkNotificationPermission, 3000);
-        })
-        .catch((err) => console.error('❌ SW failed:', err));
-}
-
-// ✅ طلب إذن الإشعارات (بعد التثبيت)
-async function checkNotificationPermission() {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-
-    if (!isStandalone) {
-        console.log('ℹ️ التطبيق مش متثبت — الإشعارات هتتفعل بعد التثبيت');
-        return;
-    }
-
-    if (!('Notification' in window)) {
-        console.log('❌ المتصفح مش بيدعم الإشعارات');
-        return;
-    }
-
-    if (localStorage.getItem('notif_asked') === 'true') {
-        if (Notification.permission === 'granted') startNotificationWatcher();
-        return;
-    }
-
-    try {
-        const permission = await Notification.requestPermission();
-        localStorage.setItem('notif_asked', 'true');
-
-        if (permission === 'granted') {
-            console.log('✅ الإشعارات اتفعلت');
-            showLocalNotification('🎉 مبروك!', 'تم تفعيل الإشعارات — هتوصلك كل الأخبار الجديدة');
-            startNotificationWatcher();
-        }
-    } catch(e) {
-        console.error('خطأ في طلب الإذن:', e);
-    }
-}
-
-// ✅ إظهار إشعار على الجهاز
-async function showLocalNotification(title, body) {
-    if (!('Notification' in window) || Notification.permission !== 'granted') return;
-    try {
-        const reg = await navigator.serviceWorker.ready;
-        await reg.showNotification(title, {
-            body: body,
-            icon: '/logo.png',
-            badge: '/logo.png',
-            vibrate: [200, 100, 200],
-            tag: 'bakaloria-notif'
-        });
-    } catch(e) {
-        console.error('خطأ في الإشعار:', e);
-    }
-}
-
-// ✅ مراقبة الإشعارات الجديدة
-let lastNotifCheck = parseInt(localStorage.getItem('last_notif_check') || Date.now().toString());
-let notificationWatcherInterval = null;
-
-function startNotificationWatcher() {
-    if (notificationWatcherInterval) return;
-    console.log('👀 بدء مراقبة الإشعارات');
-
-    notificationWatcherInterval = setInterval(async () => {
-        if (Notification.permission !== 'granted') return;
-
-        try {
-            const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"), limit(5));
-            const snap = await getDocs(q);
-            const newNotifs = [];
-            snap.forEach(d => {
-                const data = d.data();
-                if (data.createdAt > lastNotifCheck) newNotifs.push(data);
-            });
-
-            newNotifs.reverse().forEach(n => {
-                showLocalNotification(`${n.icon || '🔔'} ${n.title || 'إشعار'}`, n.message || '');
-            });
-
-            if (newNotifs.length > 0) {
-                lastNotifCheck = Date.now();
-                localStorage.setItem('last_notif_check', lastNotifCheck.toString());
-            }
-        } catch(e) {
-            console.error('خطأ في check:', e);
-        }
-    }, 30000);
-}
-
-// ✅ بدء المراقبة لو الإذن موجود
-if (Notification.permission === 'granted') {
-    startNotificationWatcher();
-}
-
+        // كود إشعار تثبيت التطبيق
         let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    
-    // 🌟 نتأكد إن الرسالة ظهرت قبل كده ولا لأ
-    const hasSeenInstallPrompt = localStorage.getItem('hasSeenInstallPrompt');
-    
-    // لو مظهرتش قبل كده، نظهرها بعد 3 ثواني ونحفظ إنها ظهرت
-    if (!hasSeenInstallPrompt) {
-        setTimeout(() => {
-            document.getElementById('installAppModal').classList.add('active');
-            // نحفظ إنها ظهرت عشان متظهرش تاني
-            localStorage.setItem('hasSeenInstallPrompt', 'true');
-        }, 3000);
-    }
-});
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            setTimeout(() => {
+                document.getElementById('installAppModal').classList.add('active');
+            }, 3000);
+        });
 
         document.getElementById('customInstallBtn').addEventListener('click', async () => {
             if (deferredPrompt) {
@@ -1034,159 +882,9 @@ window.addEventListener('beforeinstallprompt', (e) => {
                 closeModal('installAppModal');
             }
         });
-        // ✅ بحث شامل: المواد + الوحدات + الدروس + المحتوى + الامتحانات
-window.performSearch = async function() {
-    const term = document.getElementById('searchInput').value.trim().toLowerCase();
-    const resultsDiv = document.getElementById('searchResults');
-
-    if (!term) {
-        resultsDiv.innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة أو الدرس أو المحتوى للبحث...</p>';
-        return;
-    }
-
-    resultsDiv.innerHTML = '<p style="text-align:center; color:var(--muted);">⏳ جاري البحث...</p>';
-
-    let allResults = [];
-
-    // ===== 1. البحث في المواد الثابتة =====
-    const subjectMatches = subjectsData.filter(sub => 
-        sub.title.toLowerCase().includes(term)
-    );
-    subjectMatches.forEach(sub => {
-        allResults.push({
-            type: 'subject',
-            icon: '📚',
-            title: sub.title,
-            subtitle: 'مادة',
-            action: sub.file === 'quiz' 
-                ? `openSubject('quiz', '${sub.title}')` 
-                : `openEmbedded('${sub.file}', '${sub.title}')`
-        });
-    });
-
-    // ===== 2. البحث في Firestore (وحدات + دروس + محتوى) =====
-    try {
-        // البحث في كل المحتوى
-        const contentSnap = await getDocs(collection(db, "content"));
-        const allContent = [];
-        contentSnap.forEach(d => allContent.push({ id: d.id, ...d.data() }));
-
-        // وحدات
-        allContent.filter(x => x.kind === 'unit' && x.title.toLowerCase().includes(term)).forEach(u => {
-            const subjectName = getSubjectName(u.subject);
-            allResults.push({
-                type: 'unit',
-                icon: '📘',
-                title: u.title,
-                subtitle: `وحدة في ${subjectName}`,
-                action: `openEmbedded('${getSubjectFile(u.subject)}?subject=${u.subject}', '${subjectName}')`
-            });
-        });
-
-        // دروس
-        allContent.filter(x => x.kind === 'lesson' && x.title.toLowerCase().includes(term)).forEach(l => {
-            const parentUnit = allContent.find(u => u.id === l.parentId);
-            const subjectName = getSubjectName(l.subject);
-            allResults.push({
-                type: 'lesson',
-                icon: '📝',
-                title: l.title,
-                subtitle: `درس في ${subjectName}${parentUnit ? ' — ' + parentUnit.title : ''}`,
-                action: `openEmbedded('${getSubjectFile(l.subject)}?subject=${l.subject}', '${subjectName}')`
-            });
-        });
-
-        // محتوى (نص أو عنوان)
-        allContent.filter(x => x.kind === 'item' && 
-            (x.title.toLowerCase().includes(term) || (x.text && x.text.toLowerCase().includes(term)))
-        ).forEach(it => {
-            const parentLesson = allContent.find(l => l.id === it.parentId);
-            const subjectName = getSubjectName(it.subject);
-            allResults.push({
-                type: 'item',
-                icon: '🔹',
-                title: it.title,
-                subtitle: `محتوى في ${subjectName}${parentLesson ? ' — ' + parentLesson.title : ''}`,
-                action: `openEmbedded('${getSubjectFile(it.subject)}?subject=${it.subject}', '${subjectName}')`
-            });
-        });
-
-        // ===== 3. البحث في الامتحانات =====
-        const examsSnap = await getDocs(collection(db, "exams"));
-        examsSnap.forEach(d => {
-            const exam = d.data();
-            if (exam.title && exam.title.toLowerCase().includes(term)) {
-                const subjectName = getSubjectName(exam.subject);
-                allResults.push({
-                    type: 'exam',
-                    icon: '📝',
-                    title: exam.title,
-                    subtitle: `امتحان في ${subjectName} (${exam.questions?.length || 0} أسئلة)`,
-                    action: `openEmbedded('test.html', 'اختبر نفسك')`
-                });
-            }
-        });
-    } catch (e) {
-        console.error('Search error:', e);
-    }
-
-    // ===== 4. عرض النتائج =====
-    if (allResults.length === 0) {
-        resultsDiv.innerHTML = '<p style="text-align:center; color:var(--danger); font-weight:bold;">❌ لا توجد نتائج مطابقة</p>';
-        return;
-    }
-
-    // تجميع النتائج حسب النوع
-    const groups = {
-        subject: { label: '📚 المواد', items: [] },
-        unit: { label: '📘 الوحدات', items: [] },
-        lesson: { label: '📝 الدروس', items: [] },
-        item: { label: '🔹 المحتوى', items: [] },
-        exam: { label: '📝 الامتحانات', items: [] }
-    };
-    allResults.forEach(r => groups[r.type].items.push(r));
-
-    let html = `<p style="text-align:center; color:var(--muted); margin-bottom:15px;">تم العثور على ${allResults.length} نتيجة</p>`;
-
-    Object.keys(groups).forEach(key => {
-        const g = groups[key];
-        if (g.items.length === 0) return;
-        html += `<h3 style="color:var(--accent); font-size:16px; margin:15px 0 8px;">${g.label} (${g.items.length})</h3>`;
-        html += g.items.map(item => `
-            <div class="subject-card" onclick="${item.action}" style="padding:15px 20px;">
-                <div>
-                    <h2 style="font-size:17px;">${item.icon} ${item.title}</h2>
-                    <p style="font-size:13px; color:var(--muted); margin-top:4px;">${item.subtitle}</p>
-                </div>
-                <span class="arrow" style="width:40px; height:40px; font-size:20px;">⬅️</span>
-            </div>
-        `).join('');
-    });
-
-    resultsDiv.innerHTML = html;
-};
-
-// ✅ دالة مساعدة: تحويل كود المادة لاسم عربي
-function getSubjectName(subject) {
-    const map = {
-        'arabic': 'العربي',
-        'english': 'الإنجليزي',
-        'history': 'التاريخ',
-        'programming': 'البرمجة'
-    };
-    return map[subject] || subject;
-}
-
-// ✅ دالة مساعدة: تحويل كود المادة لاسم الملف
-function getSubjectFile(subject) {
-    const map = {
-        'arabic': 'Arabic.html',
-        'english': 'English.html',
-        'history': 'History.html',
-        'programming': 'programming.html'
-    };
-    return map[subject] || 'Arabic.html';
-}
     </script>
+
+    <!-- ✅ نظام الإشعارات -->
+    <script type="module" src="push-notifications.js"></script>
 </body>
 </html>

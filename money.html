@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>محاكي التداول | منصة البكالوريا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #050a14; --card: #0a1428; --text: #e2e8f0;
+        --accent: #00f0ff; --success: #00ff88; --danger: #ff3b3b; --border: #1a365d;
+        --gold: #ffd700;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+    body { background-color: var(--bg); background-image: linear-gradient(rgba(0,240,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,255,0.05) 1px, transparent 1px); background-size: 30px 30px; color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    .game-screen { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(10, 20, 40, 0.9); border-bottom: 2px solid var(--accent); }
+    .top-bar .user-info { background: rgba(0,240,255,0.1); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s; }
+    .top-bar .user-info:hover { background: rgba(0,240,255,0.25); transform: scale(1.05); }
+    .top-bar .user-info span { color: var(--accent); }
+    .top-bar .round { color: var(--accent); font-weight: bold; font-size: 15px; }
+    .top-bar .back-btn-top { background: rgba(0,240,255,0.15); border: 1px solid var(--accent); color: var(--accent); padding: 6px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
+
+    .money-box { margin: 12px 15px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .money-header { background: linear-gradient(90deg, rgba(0,255,136,0.2), transparent); padding: 10px 15px; font-weight: bold; color: var(--success); font-size: 14px; border-bottom: 1px solid var(--border); }
+    .money-content { padding: 15px; display: flex; flex-direction: column; gap: 8px; }
+    .money-row { display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
+    .money-row .label { color: #888; font-size: 14px; }
+    .money-row .val { font-weight: bold; font-family: Arial, sans-serif; direction: ltr; font-size: 16px; color: var(--text); }
+    .money-row.total { border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 5px; }
+    .money-row.total .label { color: var(--text); font-weight: bold; font-size: 15px; }
+    .money-row.total .val { color: var(--accent); font-size: 18px; text-shadow: 0 0 10px rgba(0,240,255,0.3); }
+
+    .shares-box {
+        margin: 0 15px 12px;
+        background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(0,255,136,0.1));
+        border: 1px solid rgba(0,240,255,0.4);
+        border-radius: 14px;
+        padding: 12px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .shares-box .shares-label { font-size: 14px; color: #aaa; font-weight: bold; }
+    .shares-box .shares-count { font-size: 26px; font-weight: bold; color: var(--accent); font-family: Arial, sans-serif; direction: ltr; }
+    .shares-box .shares-count small { font-size: 13px; color: #888; font-weight: normal; }
+
+    .news-box { margin: 0 15px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .news-header { background: linear-gradient(90deg, rgba(0,240,255,0.2), transparent); padding: 10px 15px; font-weight: bold; color: var(--accent); font-size: 14px; border-bottom: 1px solid var(--border); }
+    .news-content { padding: 12px 15px; display: flex; flex-direction: column; gap: 10px; }
+    .news-item { background: rgba(0,240,255,0.05); border-right: 3px solid var(--accent); padding: 10px 12px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
+
+    .countries-row { display: flex; gap: 8px; padding: 0 15px; margin-bottom: 12px; }
+    .country-btn { flex: 1; background: var(--card); border: 2px solid var(--border); padding: 12px 5px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; font-weight: bold; font-size: 14px; }
+    .country-btn.active { border-color: var(--accent); background: rgba(0,240,255,0.15); }
+
+    .companies-list { display: flex; flex-direction: column; gap: 10px; padding: 0 15px; margin-bottom: 15px; }
+    .company-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; gap: 10px; transition: 0.3s; }
+    .company-card:hover { border-color: var(--accent); box-shadow: 0 0 15px rgba(0,240,255,0.1); }
+
+    /* ✅ شركة تحت الصفر */
+    .company-card.negative { border-color: rgba(255,59,59,0.5); background: rgba(255,59,59,0.03); }
+    .company-card.negative .company-name { color: #ff6b6b; }
+
+    .company-header { display: flex; justify-content: space-between; align-items: center; }
+    .company-name { font-weight: bold; font-size: 16px; color: var(--text); }
+    .company-price { color: var(--accent); font-weight: bold; font-size: 20px; font-family: Arial, sans-serif; direction: ltr; transition: 0.3s; }
+    .company-desc { font-size: 12px; color: #888; line-height: 1.5; }
+
+    .price-up { color: var(--success) !important; }
+    .price-down { color: var(--danger) !important; }
+
+    .holds-box { background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.3); padding: 8px 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .holds-label { font-size: 13px; color: #888; }
+    .holds-value { font-size: 18px; font-weight: bold; color: var(--success); font-family: Arial, sans-serif; direction: ltr; }
+
+    .trade-controls { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+
+    .qty-box {
+        display: flex; align-items: center; justify-content: center;
+        background: #000; border: 2px solid var(--border);
+        border-radius: 12px; padding: 4px; height: 52px; gap: 4px;
+    }
+
+    .qty-btn {
+        background: rgba(0,240,255,0.1);
+        border: 2px solid var(--accent);
+        color: var(--accent);
+        font-size: 26px; font-weight: bold;
+        width: 46px; height: 46px;
+        cursor: pointer; user-select: none;
+        display: grid; place-items: center;
+        border-radius: 10px; transition: 0.15s;
+        line-height: 1;
+    }
+    .qty-btn:hover { background: var(--accent); color: #000; transform: scale(1.08); }
+    .qty-btn:active { transform: scale(0.95); }
+
+    .qty-val {
+        width: 70px; height: 46px;
+        text-align: center; color: #fff; font-weight: bold;
+        border: none; background: transparent; outline: none;
+        font-size: 22px; font-family: Arial, sans-serif;
+        direction: ltr; font-variant-numeric: lining-nums;
+    }
+    .qty-val::-webkit-outer-spin-button,
+    .qty-val::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .trade-btn {
+        flex: 1; padding: 12px; border-radius: 12px; border: none;
+        font-weight: bold; font-size: 16px; cursor: pointer;
+        transition: 0.2s; height: 52px;
+        letter-spacing: 0.5px;
+    }
+    .buy-btn { background: var(--success); color: #000; }
+    .buy-btn:hover { background: #00cc6e; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,255,136,0.4); }
+    .sell-btn { background: var(--danger); color: #fff; }
+    .sell-btn:hover { background: #cc2f2f; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255,59,59,0.4); }
+    .trade-btn:active { transform: translateY(0); }
+
+    .bottom-actions { display: flex; gap: 10px; padding: 0 15px 20px; margin-top: auto; }
+    .action-btn { flex: 1; background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 5px; }
+    .next-btn { background: var(--accent); color: #000; border: none; box-shadow: 0 0 15px rgba(0,240,255,0.3); }
+
+    .lb-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 15px; }
+    .lb-header h2 { color: var(--gold); font-size: 24px; }
+    .lb-back-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+    .leaderboard-list { padding: 0 15px; }
+    .leaderboard-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid var(--border); background: var(--card); border-radius: 8px; margin-bottom: 8px; }
+    .leaderboard-item:nth-child(1) { border: 2px solid var(--gold); background: rgba(255,215,0,0.05); }
+    .leaderboard-item:nth-child(2) { border: 2px solid #c0c0c0; }
+    .leaderboard-item:nth-child(3) { border: 2px solid #cd7f32; }
+    .lb-rank { width: 40px; font-size: 20px; font-weight: bold; text-align: center; }
+    .lb-name { flex: 1; font-weight: bold; padding-right: 10px; }
+    .lb-score { color: var(--success); font-weight: bold; font-family: Arial, sans-serif; font-size: 16px; direction: ltr; }
+
+    #settingsPage { display: none; flex-direction: column; min-height: 100vh; padding: 20px; }
+    .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .settings-header h2 { color: var(--accent); }
+    .settings-back { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+    .settings-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 15px; }
+    .settings-card h3 { color: var(--accent); margin-bottom: 15px; font-size: 18px; }
+    .settings-btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 15px; margin-bottom: 10px; }
+    .btn-secondary { background: var(--border); color: var(--text); }
+    .btn-danger { background: var(--danger); color: #fff; }
+
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--card); border: 2px solid var(--accent); padding: 25px; border-radius: 20px; max-width: 450px; width: 100%; text-align: center; max-height: 90vh; overflow-y: auto; }
+    .modal-content h2 { color: var(--accent); margin-bottom: 15px; }
+    .close-modal-btn { background: var(--accent); color: #000; border: none; padding: 12px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; }
+    .welcome-rules { text-align: right; margin: 20px 0; line-height: 2; font-size: 15px; padding-right: 20px; }
+
+    .market-status {
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        margin: 0 15px 12px; padding: 8px 12px;
+        background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.3);
+        border-radius: 10px; font-size: 13px; font-weight: bold; color: var(--success);
+    }
+    .market-status.down { background: rgba(255,59,59,0.08); border-color: rgba(255,59,59,0.3); color: var(--danger); }
+    .market-status .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .trade-log { margin: 0 15px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; max-height: 100px; overflow-y: auto; font-size: 12px; }
+    .trade-log .log-entry { padding: 3px 0; border-bottom: 1px dashed var(--border); color: #aaa; }
+    .trade-log .log-entry:last-child { border-bottom: none; }
+    .trade-log .log-entry .buy { color: var(--success); font-weight: bold; }
+    .trade-log .log-entry .sell { color: var(--danger); font-weight: bold; }
+
+    /* ✅ زر الصوت */
+    .sound-btn {
+        background: rgba(0,240,255,0.15);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        display: grid; place-items: center;
+        transition: 0.2s;
+    }
+    .sound-btn:hover { background: var(--accent); color: #000; }
+    .sound-btn.muted { opacity: 0.5; }
+</style>
+</head>
+<body>
+    <div class="game-screen" id="gameScreen">
+        <div class="top-bar">
+            <div class="user-info" onclick="showSettingsPage()">
+                👤 <span id="headerName">...</span>
+            </div>
+            <div class="round">جولة <span id="roundNum">1</span></div>
+            <button class="sound-btn" id="soundToggle" onclick="toggleSound()" title="تشغيل/إيقاف الصوت">🔊</button>
+            <button class="back-btn-top" onclick="window.location.href='index.html'">🔙 رجوع</button>
+        </div>
+
+        <div class="money-box">
+            <div class="money-header">💼 محفظتك</div>
+            <div class="money-content">
+                <div class="money-row">
+                    <span class="label">الرصيد النقدي:</span>
+                    <span class="val" id="cashDisplay">$500.00</span>
+                </div>
+                <div class="money-row">
+                    <span class="label">قيمة الأسهم:</span>
+                    <span class="val" id="stocksValue">$0.00</span>
+                </div>
+                <div class="money-row total">
+                    <span class="label">إجمالي الثروة:</span>
+                    <span class="val" id="totalWealth">$500.00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="shares-box">
+            <span class="shares-label">📦 إجمالي الأسهم المملوكة</span>
+            <span class="shares-count" id="totalSharesDisplay">0 <small>سهم</small></span>
+        </div>
+
+        <div class="market-status" id="marketStatus">
+            <span class="dot"></span>
+            <span id="marketText">السوق مستقر</span>
+        </div>
+
+        <div class="news-box">
+            <div class="news-header">📰 الأخبار</div>
+            <div class="news-content" id="newsContainer"></div>
+        </div>
+
+        <div class="trade-log" id="tradeLog">
+            <div style="color:#666; text-align:center;">لا توجد تداولات بعد</div>
+        </div>
+
+        <div class="countries-row">
+            <div class="country-btn active" onclick="showCountry('egypt', this)">🇪🇬 مصر</div>
+            <div class="country-btn" onclick="showCountry('japan', this)">🇯🇵 اليابان</div>
+            <div class="country-btn" onclick="showCountry('usa', this)">🇺🇸 أمريكا</div>
+        </div>
+
+        <div class="companies-list" id="companiesList"></div>
+
+        <div class="bottom-actions">
+            <button class="action-btn" onclick="showLeaderboardPage()">🏆 الصدارة</button>
+            <button class="action-btn next-btn" onclick="nextRound()">🔄 الجولة التالية</button>
+        </div>
+    </div>
+
+    <div id="settingsPage">
+        <div class="settings-header">
+            <h2>⚙️ إعدادات الحساب</h2>
+            <button class="settings-back" onclick="hideSettingsPage()">🔙 رجوع</button>
+        </div>
+        <div class="settings-card">
+            <h3>👤 معلومات الحساب</h3>
+            <p>الاسم: <b id="settingsName">...</b></p>
+            <p style="margin-top:10px;">الرصيد: <b id="settingsCash">$500.00</b></p>
+            <p style="margin-top:10px;">عدد الأسهم: <b id="settingsShares">0</b></p>
+            <p style="margin-top:10px;">الجولة: <b id="settingsRound">1</b></p>
+        </div>
+        <div class="settings-card">
+            <h3>🎮 إعدادات اللعبة</h3>
+            <button class="settings-btn btn-secondary" onclick="showGameRules()">📖 كيفية اللعب</button>
+            <button class="settings-btn btn-danger" onclick="resetGame()">🔄 إعادة اللعب من الأول</button>
+        </div>
+    </div>
+
+    <div id="leaderboardPage" style="display: none;">
+        <div class="lb-header">
+            <h2>🏆 لوحة الصدارة</h2>
+            <button class="lb-back-btn" onclick="hideLeaderboardPage()">🔙 رجوع</button>
+        </div>
+        <div class="leaderboard-list" id="leaderboardList"></div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h2>📊 إحصائيات الجولة</h2>
+            <div id="resultText" style="margin: 20px 0; font-size: 16px; line-height: 1.8; text-align: right;"></div>
+            <button class="close-modal-btn" onclick="closeModal('resultModal')">حسناً</button>
+        </div>
+    </div>
+
+    <!-- ✅ نافذة كيفية اللعب (أول مرة بس) -->
+    <div class="modal" id="welcomeModal">
+        <div class="modal-content">
+            <h2>🎮 أهلاً بك في محاكي التداول!</h2>
+            <ul class="welcome-rules">
+                <li>💰 <b>الرصيد:</b> تبدأ برصيد 500$ (المدير 7000$).</li>
+                <li>📊 <b>الشركات:</b> عندك 15 شركة من 3 دول.</li>
+                <li>📰 <b>الأخبار:</b> في كل جولة تظهر أخبار تؤثر على أسعار الشركات — إيجابية ترفع السعر، سلبية تنزله.</li>
+                <li>🛒 <b>التداول:</b> تقدر تشتري وتبيع، زرار + و − لتحديد الكمية.</li>
+                <li>📈 <b>النتائج:</b> بعد كل جولة، هتشوف كسبت كام أو خسرت كام.</li>
+                <li>🏆 <b>الهدف:</b> توصل لأعلى ثروة بأقل عدد جولات وتتصدر لوحة الصدارة.</li>
+            </ul>
+            <button class="close-modal-btn" onclick="closeWelcome()">فهمت، يلا نبدأ! 🚀</button>
+        </div>
+    </div>
+
+    <div class="modal" id="rulesModal">
+        <div class="modal-content">
+            <h2>🎮 كيفية اللعب والنصائح</h2>
+            <ul class="welcome-rules">
+                <li>💰 <b>الرصيد:</b> تبدأ برصيد 500$ (المدير 7000$).</li>
+                <li>📊 <b>الشركات:</b> عندك 15 شركة من 3 دول.</li>
+                <li>📰 <b>الأخبار:</b> في كل جولة تظهر أخبار تؤثر على أسعار الشركات.</li>
+                <li>🛒 <b>التداول:</b> تقدر تشتري وتبيع، زرار + و − لتحديد الكمية.</li>
+                <li>📈 <b>النتائج:</b> بعد كل جولة، هتشوف كسبت كام أو خسرت كام.</li>
+                <li>🏆 <b>الهدف:</b> توصل لأعلى ثروة بأقل عدد جولات وتتصدر لوحة الصدارة.</li>
+            </ul>
+            <button class="close-modal-btn" onclick="closeModal('rulesModal')">فهمت</button>
+        </div>
+    </div>
+        <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDe5INvR_ifEARHmw7M0qqBQ34-G6z4p7w",
+        authDomain: "mansa-educational.firebaseapp.com",
+        projectId: "mansa-educational",
+        storageBucket: "mansa-educational.firebasestorage.app",
+        messagingSenderId: "144298769750",
+        appId: "1:144298769750:web:43eb0c63e5d2acb37baaf7"
+    };
+
+    const app = initializeApp(firebaseConfig, "moneyGameApp");
+    const db = getFirestore(app);
+
+    const market = {
+        'egypt': { flag: '🇪🇬', companies: [
+            { id: 'eg1', name: 'البنك الأهلي', price: 50, desc: 'أكبر بنك في مصر.' },
+            { id: 'eg2', name: 'طلعت مصطفى', price: 30, desc: 'شركة تطوير عقاري.' },
+            { id: 'eg3', name: 'السويدي', price: 45, desc: 'شركة صناعية للكابلات.' },
+            { id: 'eg4', name: 'حديد عز', price: 60, desc: 'أكبر منتج للحديد والصلب.' },
+            { id: 'eg5', name: 'فوري', price: 20, desc: 'شركة تكنولوجيا مالية.' }
+        ]},
+        'japan': { flag: '🇯🇵', companies: [
+            { id: 'jp1', name: 'تويوتا', price: 150, desc: 'أكبر شركة سيارات في العالم.' },
+            { id: 'jp2', name: 'سوني', price: 120, desc: 'شركة إلكترونيات وترفيه.' },
+            { id: 'jp3', name: 'نيسان', price: 90, desc: 'شركة سيارات يابانية.' },
+            { id: 'jp4', name: 'باناسونيك', price: 80, desc: 'شركة أجهزة منزلية.' },
+            { id: 'jp5', name: 'نينتندو', price: 110, desc: 'شركة ألعاب فيديو.' }
+        ]},
+        'usa': { flag: '🇺🇸', companies: [
+            { id: 'us1', name: 'أبل', price: 200, desc: 'شركة تكنولوجيا.' },
+            { id: 'us2', name: 'مايكروسوفت', price: 180, desc: 'شركة برمجيات.' },
+            { id: 'us3', name: 'أمازون', price: 140, desc: 'أكبر متجر إلكتروني.' },
+            { id: 'us4', name: 'تسلا', price: 160, desc: 'شركة سيارات كهربائية.' },
+            { id: 'us5', name: 'جوجل', price: 190, desc: 'شركة إنترنت.' }
+        ]}
+    };
+
+    // ✅ نظام الأصوات
+    let soundEnabled = localStorage.getItem('money_game_sound') !== 'off';
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) {
+            try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+        }
+        return audioCtx;
+    }
+
+    // ✅ دالة تشغيل نغمة (تردد + مدة + نوع الموجة)
+    function playTone(freq, duration, type = 'sine', volume = 0.15, delay = 0) {
+        if (!soundEnabled) return;
+        const ctx = initAudio();
+        if (!ctx) return;
+        setTimeout(() => {
+            try {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(volume, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + duration);
+            } catch(e) {}
+        }, delay);
+    }
+
+    // ✅ أصوات مختلفة لكل حدث
+    const SOUNDS = {
+        // فتح اللعبة: نغمة ترحيب صاعدة
+        welcome: () => {
+            playTone(523, 0.15, 'sine', 0.12, 0);     // C5
+            playTone(659, 0.15, 'sine', 0.12, 150);   // E5
+            playTone(784, 0.25, 'sine', 0.12, 300);   // G5
+            playTone(1047, 0.4, 'sine', 0.12, 500);   // C6
+        },
+        // زر: نقرة قصيرة
+        click: () => {
+            playTone(800, 0.05, 'square', 0.06, 0);
+        },
+        // شراء: نغمة صاعدة سعيدة
+        buy: () => {
+            playTone(440, 0.1, 'sine', 0.12, 0);      // A4
+            playTone(554, 0.1, 'sine', 0.12, 100);    // C#5
+            playTone(659, 0.15, 'sine', 0.12, 200);   // E5
+        },
+        // بيع: نغمة هابطة
+        sell: () => {
+            playTone(659, 0.1, 'sine', 0.12, 0);      // E5
+            playTone(554, 0.1, 'sine', 0.12, 100);    // C#5
+            playTone(440, 0.15, 'sine', 0.12, 200);   // A4
+        },
+        // جولة جديدة: نغمة درامية
+        nextRound: () => {
+            playTone(392, 0.2, 'triangle', 0.1, 0);   // G4
+            playTone(523, 0.2, 'triangle', 0.1, 200); // C5
+            playTone(659, 0.3, 'triangle', 0.1, 400); // E5
+        },
+        // خطأ
+        error: () => {
+            playTone(200, 0.15, 'sawtooth', 0.1, 0);
+            playTone(150, 0.2, 'sawtooth', 0.1, 150);
+        },
+        // نجاح
+        success: () => {
+            playTone(523, 0.1, 'sine', 0.12, 0);      // C5
+            playTone(784, 0.15, 'sine', 0.12, 100);   // G5
+            playTone(1047, 0.3, 'sine', 0.12, 250);   // C6
+        },
+        // لوحة الصدارة
+        leaderboard: () => {
+            playTone(659, 0.15, 'sine', 0.1, 0);      // E5
+            playTone(880, 0.15, 'sine', 0.1, 150);    // A5
+            playTone(1109, 0.25, 'sine', 0.1, 300);   // C#6
+        },
+        // إعدادات
+        settings: () => {
+            playTone(600, 0.08, 'square', 0.06, 0);
+            playTone(900, 0.1, 'square', 0.06, 80);
+        }
+    };
+
+    window.toggleSound = function() {
+        soundEnabled = !soundEnabled;
+        localStorage.setItem('money_game_sound', soundEnabled ? 'on' : 'off');
+        const btn = document.getElementById('soundToggle');
+        btn.textContent = soundEnabled ? '🔊' : '🔇';
+        btn.classList.toggle('muted', !soundEnabled);
+        if (soundEnabled) SOUNDS.click();
+    };
+
+    let playerName = '';
+    let cash = 500;
+    let round = 1;
+    let currentCountry = 'egypt';
+    let currentPrices = {};
+    let portfolio = {};
+    let currentNews = [];
+    let playerDocId = null;
+    let isAdmin = false;
+    let userId = null;
+    let allNews = [];
+    let tradeHistory = [];
+    let negativeCompanies = {}; // ✅ الشركات اللي تحت الصفر
+
+    async function loadNewsFromDB() {
+        const saved = localStorage.getItem('money_game_news');
+        if (saved) {
+            allNews = JSON.parse(saved);
+            return;
+        }
+        try {
+            const snap = await getDocs(collection(db, "game_news"));
+            allNews = [];
+            snap.forEach(doc => {
+                const data = doc.data();
+                allNews.push({ text: data.text, ids: data.ids, effect: data.effect });
+            });
+            for (let i = allNews.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allNews[i], allNews[j]] = [allNews[j], allNews[i]];
+            }
+            localStorage.setItem('money_game_news', JSON.stringify(allNews));
+        } catch (e) { console.error(e); }
+    }
+
+    async function init() {
+        await loadNewsFromDB();
+
+        let user = null;
+        try { user = JSON.parse(localStorage.getItem('bakaloria_user')); } catch(e) {}
+        if (!user) {
+            alert("يجب تسجيل الدخول في المنصة أولاً!");
+            window.location.href = 'login.html';
+            return;
+        }
+
+        userId = user.id;
+        playerName = user.username;
+        isAdmin = user.role === 'admin';
+        document.getElementById('headerName').textContent = playerName;
+
+        // ✅ زر الصوت
+        const soundBtn = document.getElementById('soundToggle');
+        soundBtn.textContent = soundEnabled ? '🔊' : '🔇';
+        soundBtn.classList.toggle('muted', !soundEnabled);
+
+        try {
+            const progressRef = doc(db, "game_progress", userId);
+            const progressSnap = await getDoc(progressRef);
+            if (progressSnap.exists()) {
+                const data = progressSnap.data();
+                cash = data.cash;
+                round = data.round;
+                currentPrices = data.prices || {};
+                portfolio = data.portfolio || {};
+                tradeHistory = data.tradeHistory || [];
+                negativeCompanies = data.negativeCompanies || {};
+            } else {
+                cash = isAdmin ? 7000 : 500;
+                Object.keys(market).forEach(country => {
+                    market[country].companies.forEach(c => {
+                        currentPrices[c.id] = c.price;
+                        portfolio[c.id] = 0;
+                        negativeCompanies[c.id] = false;
+                    });
+                });
+            }
+        } catch(e) {
+            console.error(e);
+            cash = isAdmin ? 7000 : 500;
+            Object.keys(market).forEach(country => {
+                market[country].companies.forEach(c => {
+                    currentPrices[c.id] = c.price;
+                    portfolio[c.id] = 0;
+                    negativeCompanies[c.id] = false;
+                });
+            });
+        }
+
+        try {
+            const q = query(collection(db, "leaderboard"), where("name", "==", playerName));
+            const snap = await getDocs(q);
+            if (!snap.empty) playerDocId = snap.docs[0].id;
+        } catch(e) {}
+
+        showNews();
+        renderTradeLog();
+        updateMarketStatus();
+        showCountry('egypt', document.querySelector('.country-btn'));
+        updateUI();
+        saveScore();
+        saveProgress();
+
+        // ✅ رسالة الترحيب أول مرة بس
+        const hasSeenWelcome = localStorage.getItem('money_game_welcome_seen');
+        if (!hasSeenWelcome) {
+            setTimeout(() => {
+                document.getElementById('welcomeModal').classList.add('active');
+                SOUNDS.welcome();
+            }, 500);
+        } else {
+            SOUNDS.welcome();
+        }
+    }
+
+    window.closeWelcome = function() {
+        localStorage.setItem('money_game_welcome_seen', 'true');
+        document.getElementById('welcomeModal').classList.remove('active');
+        SOUNDS.success();
+    };
+
+    async function saveProgress() {
+        if (!userId) return;
+        try {
+            await setDoc(doc(db, "game_progress", userId), {
+                cash, round, prices: currentPrices, portfolio, tradeHistory, negativeCompanies
+            });
+        } catch(e) { console.error(e); }
+    }
+
+    async function saveScore() {
+        if (!playerName || !userId) return;
+        const total = getTotalWealth();
+        const totalShares = getTotalShares();
+        try {
+            const leaderboardRef = doc(db, "leaderboard", userId);
+            await setDoc(leaderboardRef, {
+                userId: userId,
+                name: playerName,
+                wealth: total,
+                shares: totalShares,
+                round: round,
+                updatedAt: Date.now()
+            });
+            playerDocId = userId;
+        } catch (e) { console.error(e); }
+    }
+
+    window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
+
+    function showNews() {
+        const container = document.getElementById('newsContainer');
+        if (allNews.length === 0) {
+            container.innerHTML = '<div class="news-item">⏳ جاري تحميل الأخبار...</div>';
+            return;
+        }
+        const startIdx = (round - 1) * 2;
+        currentNews = [allNews[startIdx % allNews.length], allNews[(startIdx + 1) % allNews.length]].filter(n => n);
+        container.innerHTML = currentNews.map(n => `<div class="news-item">${n.text}</div>`).join('');
+    }
+
+    function renderTradeLog() {
+        const log = document.getElementById('tradeLog');
+        if (!log) return;
+        if (tradeHistory.length === 0) {
+            log.innerHTML = '<div style="color:#666; text-align:center;">لا توجد تداولات بعد</div>';
+            return;
+        }
+        const recent = tradeHistory.slice(-5).reverse();
+        log.innerHTML = recent.map(t => {
+            const cls = t.type === 'buy' ? 'buy' : 'sell';
+            const action = t.type === 'buy' ? 'شراء' : 'بيع';
+            return `<div class="log-entry"><span class="${cls}">${action}</span> ${t.qty} × ${t.name} @ $${t.price.toFixed(2)}</div>`;
+        }).join('');
+    }
+
+    function updateMarketStatus() {
+        const el = document.getElementById('marketStatus');
+        const txt = document.getElementById('marketText');
+        if (!el || !txt) return;
+        let totalChange = 0;
+        let count = 0;
+        Object.keys(market).forEach(country => {
+            market[country].companies.forEach(c => {
+                totalChange += (currentPrices[c.id] - c.price) / c.price;
+                count++;
+            });
+        });
+        const avg = totalChange / count;
+        el.classList.remove('down');
+        if (avg > 0.02) txt.textContent = '📈 السوق في صعود قوي';
+        else if (avg > 0) txt.textContent = '📈 السوق في صعود طفيف';
+        else if (avg < -0.02) { txt.textContent = '📉 السوق في هبوط قوي'; el.classList.add('down'); }
+        else if (avg < 0) { txt.textContent = '📉 السوق في هبوط طفيف'; el.classList.add('down'); }
+        else txt.textContent = '➖ السوق مستقر';
+    }
+
+    window.showCountry = function(country, btn) {
+        currentCountry = country;
+        document.querySelectorAll('.country-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const list = document.getElementById('companiesList');
+        list.innerHTML = market[country].companies.map(c => {
+            const isNeg = negativeCompanies[c.id];
+            const arrow = isNeg ? ' ⬇️' : ' ⬆️';
+            const colorClass = isNeg ? 'price-down' : 'price-up';
+            const cardClass = isNeg ? 'company-card negative' : 'company-card';
+
+            return `
+            <div class="${cardClass}">
+                <div class="company-header">
+                    <div class="company-name">${c.name}</div>
+                    <div class="company-price ${colorClass}" id="price-${c.id}">$${currentPrices[c.id].toFixed(2)}${arrow}</div>
+                </div>
+                <div class="company-desc">${c.desc}</div>
+                <div class="holds-box">
+                    <span class="holds-label">📦 تملك</span>
+                    <span class="holds-value" id="holds-${c.id}">${portfolio[c.id]}</span>
+                </div>
+                <div class="trade-controls">
+                    <div class="qty-box">
+                        <button class="qty-btn" onclick="changeQty('${c.id}', -1)">−</button>
+                        <input type="number" class="qty-val" id="qty-${c.id}" value="1" min="1">
+                        <button class="qty-btn" onclick="changeQty('${c.id}', 1)">+</button>
+                    </div>
+                    <button class="trade-btn buy-btn" onclick="buy('${c.id}')">شراء</button>
+                    <button class="trade-btn sell-btn" onclick="sell('${c.id}')">بيع</button>
+                </div>
+            </div>
+        `}).join('');
+    };
+
+    window.changeQty = function(id, change) {
+        SOUNDS.click();
+        const input = document.getElementById('qty-' + id);
+        let val = parseInt(input.value) || 1;
+        val += change;
+        if (change > 0) {
+            const max = Math.floor(cash / currentPrices[id]);
+            if (val > max && max > 0) val = max;
+            if (val < 1) val = 1;
+        } else {
+            if (val < 1) val = 1;
+        }
+        input.value = val;
+    };
+
+    window.buy = function(id) {
+        const qty = parseInt(document.getElementById('qty-' + id).value);
+        if (isNaN(qty) || qty <= 0) return;
+        const cost = qty * currentPrices[id];
+        if (cost > cash) {
+            SOUNDS.error();
+            alert('❌ رصيدك لا يكفي!');
+            return;
+        }
+        const company = findCompany(id);
+        cash -= cost;
+        portfolio[id] += qty;
+        tradeHistory.push({ type: 'buy', name: company.name, qty, price: currentPrices[id], round });
+        if (tradeHistory.length > 50) tradeHistory = tradeHistory.slice(-50);
+        SOUNDS.buy();
+        updateUI();
+        document.getElementById('holds-' + id).textContent = portfolio[id];
+        renderTradeLog();
+        saveScore();
+        saveProgress();
+    };
+
+    window.sell = function(id) {
+        const qty = parseInt(document.getElementById('qty-' + id).value);
+        if (isNaN(qty) || qty <= 0) return;
+        if (qty > portfolio[id]) {
+            SOUNDS.error();
+            alert('❌ مش عندك كمية كافية للبيع!');
+            return;
+        }
+        const company = findCompany(id);
+        cash += qty * currentPrices[id];
+        portfolio[id] -= qty;
+        tradeHistory.push({ type: 'sell', name: company.name, qty, price: currentPrices[id], round });
+        if (tradeHistory.length > 50) tradeHistory = tradeHistory.slice(-50);
+        SOUNDS.sell();
+        updateUI();
+        document.getElementById('holds-' + id).textContent = portfolio[id];
+        renderTradeLog();
+        saveScore();
+        saveProgress();
+    };
+
+    function findCompany(id) {
+        for (const country in market) {
+            const c = market[country].companies.find(x => x.id === id);
+            if (c) return c;
+        }
+        return { name: 'Unknown' };
+    }
+
+    function getTotalShares() {
+        let total = 0;
+        Object.keys(portfolio).forEach(id => total += portfolio[id]);
+        return total;
+    }
+
+    function updateUI() {
+        const stocksValue = Object.keys(portfolio).reduce((sum, id) => sum + (portfolio[id] * currentPrices[id]), 0);
+        const total = cash + stocksValue;
+        const totalShares = getTotalShares();
+
+        document.getElementById('cashDisplay').textContent = '$' + cash.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('stocksValue').textContent = '$' + stocksValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('totalWealth').textContent = '$' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('roundNum').textContent = round;
+        document.getElementById('totalSharesDisplay').innerHTML = totalShares + ' <small>سهم</small>';
+    }
+
+    function getTotalWealth() {
+        let total = cash;
+        Object.keys(portfolio).forEach(id => total += portfolio[id] * currentPrices[id]);
+        return total;
+    }
+
+    // ✅ الجولة التالية: تحديث الأسعار + الشركات تحت الصفر
+    window.nextRound = function() {
+        SOUNDS.nextRound();
+        const oldTotal = getTotalWealth();
+
+        let effectMap = {};
+        currentNews.forEach(news => {
+            news.ids.forEach(id => effectMap[id] = (effectMap[id] || 0) + news.effect);
+        });
+
+        // ✅ كل الشركات: اللي ليها أخبار تتأثر، واللي مالهاش تنزل عشوائي
+        Object.keys(currentPrices).forEach(id => {
+            const hasNews = effectMap[id] !== undefined;
+            let totalChange;
+
+            if (hasNews) {
+                // شركة ليها خبر: التأثير حسب الخبر
+                let baseChange = (Math.random() - 0.48) * 0.06;
+                let newsChange = effectMap[id];
+                let volatilityBoost = (Math.random() - 0.5) * 0.02;
+                totalChange = baseChange + newsChange + volatilityBoost;
+            } else {
+                // ✅ شركة مالهاش خبر: تنزل عشوائي تحت الصفر (احتمال 40%)
+                if (Math.random() < 0.4) {
+                    totalChange = -(Math.random() * 0.15 + 0.05); // من -5% لـ -20%
+                } else {
+                    totalChange = (Math.random() - 0.5) * 0.06;
+                }
+            }
+
+            // تطبيق التغيير
+            let newPrice = currentPrices[id] * (1 + totalChange);
+            // ✅ لو السعر نزل تحت الصفر، نخليه عند 1
+            if (newPrice < 1) newPrice = 1;
+            currentPrices[id] = newPrice;
+
+            // ✅ تحديد لو الشركة تحت الصفر (مقارنة بالسعر الأصلي)
+            const originalPrice = findCompany(id).price;
+            negativeCompanies[id] = currentPrices[id] < originalPrice;
+        });
+
+        const newTotal = getTotalWealth();
+        const diff = newTotal - oldTotal;
+        const sign = diff >= 0 ? '+' : '';
+        const color = diff >= 0 ? 'var(--success)' : 'var(--danger)';
+
+        document.getElementById('resultText').innerHTML = `
+            <p>الرصيد النقدي: <b>$${cash.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</b></p>
+            <p>قيمة الأسهم: <b>$${(newTotal - cash).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</b></p>
+            <p>إجمالي الثروة: <b>$${newTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</b></p>
+            <p>عدد الأسهم: <b>${getTotalShares()}</b></p>
+            <hr style="border-color:var(--border); margin:10px 0;">
+            <p style="font-size:22px; color:${color}">${sign}$${Math.abs(diff).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+        `;
+        document.getElementById('resultModal').classList.add('active');
+
+        if (diff >= 0) SOUNDS.success();
+        else SOUNDS.error();
+
+        round++;
+        showNews();
+        updateMarketStatus();
+        updateUI();
+        showCountry(currentCountry, document.querySelector('.country-btn.active'));
+        saveScore();
+        saveProgress();
+    };
+
+    window.showSettingsPage = function() {
+        SOUNDS.settings();
+        document.getElementById('gameScreen').style.display = 'none';
+        document.getElementById('settingsPage').style.display = 'flex';
+        document.getElementById('settingsName').textContent = playerName;
+        document.getElementById('settingsCash').textContent = '$' + cash.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('settingsShares').textContent = getTotalShares();
+        document.getElementById('settingsRound').textContent = round;
+    };
+
+    window.hideSettingsPage = function() {
+        SOUNDS.click();
+        document.getElementById('settingsPage').style.display = 'none';
+        document.getElementById('gameScreen').style.display = 'flex';
+    };
+
+    window.showGameRules = function() {
+        SOUNDS.click();
+        document.getElementById('rulesModal').classList.add('active');
+    };
+
+    window.resetGame = async function() {
+        if (!confirm('هل أنت متأكد؟ كل تقدمك هيت مسح!')) return;
+        try {
+            localStorage.removeItem('money_game_news');
+            localStorage.removeItem('money_game_welcome_seen');
+            await deleteDoc(doc(db, "game_progress", userId));
+            await deleteDoc(doc(db, "leaderboard", userId));
+            SOUNDS.error();
+            alert('✅ تم مسح تقدمك!');
+            location.reload();
+        } catch(e) { alert('خطأ: ' + e.message); }
+    };
+
+    // ✅ لوحة صدارة واحدة: ترتيب بالنقاط (ثروة ÷ جولات)
+    window.showLeaderboardPage = async function() {
+        SOUNDS.leaderboard();
+        document.getElementById('gameScreen').style.display = 'none';
+        document.getElementById('leaderboardPage').style.display = 'block';
+        const list = document.getElementById('leaderboardList');
+        list.innerHTML = '<p style="text-align:center;">⏳ جاري التحميل...</p>';
+
+        try {
+            const snap = await getDocs(collection(db, "leaderboard"));
+            if (snap.empty) {
+                list.innerHTML = '<p style="text-align:center;">لا توجد نتائج مسجلة بعد.</p>';
+                return;
+            }
+
+            const players = [];
+            snap.forEach(d => {
+                const data = d.data();
+                players.push({
+                    id: d.id,
+                    userId: data.userId,
+                    name: data.name,
+                    wealth: data.wealth || 0,
+                    round: data.round || 1
+                });
+            });
+
+            players.forEach(p => {
+                const divisor = (p.round * 0.3) + 0.7;
+                p.score = p.wealth / divisor;
+            });
+
+            players.sort((a, b) => b.score - a.score);
+
+            let html = '<h3 style="color:var(--gold); margin: 10px 0 15px; font-size: 20px; text-align:center;">🏆 لوحة الصدارة</h3>';
+            html += '<p style="text-align:center; color:#888; font-size:13px; margin-bottom:15px;">الترتيب حسب الثروة مقسومة على عدد الجولات — الفلوس الأعلى والجولات الأقل = ترتيب أعلى</p>';
+
+            html += players.map((p, i) => {
+                const rank = i + 1;
+                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+                const isMe = p.userId === userId;
+                const rankColor = rank === 1 ? 'var(--gold)' : rank === 2 ? '#c0c0c0' : rank === 3 ? '#cd7f32' : 'var(--text)';
+                return `<div class="leaderboard-item" style="${isMe ? 'border:2px solid var(--accent);' : ''}">
+                    <span class="lb-rank" style="color:${rankColor};">${medal}</span>
+                    <span class="lb-name">
+                        ${p.name} ${isMe ? '(أنت)' : ''}
+                        <div style="font-size:11px; color:#888; margin-top:2px;">
+                            💰 $${p.wealth.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} · 
+                            🔄 ${p.round} جولة · 
+                            ⭐ ${p.score.toFixed(0)} نقطة
+                        </div>
+                    </span>
+                    <span class="lb-score" style="color:${rankColor};">${p.score.toFixed(0)}</span>
+                </div>`;
+            }).join('');
+
+            list.innerHTML = html;
+        } catch(e) {
+            list.innerHTML = '<p style="color:red; text-align:center;">خطأ: ' + e.message + '</p>';
+        }
+    };
+
+    window.hideLeaderboardPage = function() {
+        SOUNDS.click();
+        document.getElementById('leaderboardPage').style.display = 'none';
+        document.getElementById('gameScreen').style.display = 'flex';
+    };
+
+    // ✅ دالة لجلب المركز الحالي (للاستخدام في الملف الشخصي)
+    window.getMyRank = async function() {
+        if (!userId) return null;
+        try {
+            const snap = await getDocs(collection(db, "leaderboard"));
+            const players = [];
+            snap.forEach(d => {
+                const data = d.data();
+                players.push({
+                    userId: data.userId,
+                    name: data.name,
+                    wealth: data.wealth || 0,
+                    round: data.round || 1
+                });
+            });
+            players.forEach(p => {
+                const divisor = (p.round * 0.3) + 0.7;
+                p.score = p.wealth / divisor;
+            });
+            players.sort((a, b) => b.score - a.score);
+            const myIndex = players.findIndex(p => p.userId === userId);
+            return myIndex === -1 ? null : { rank: myIndex + 1, total: players.length, score: players[myIndex].score };
+        } catch(e) { return null; }
+    };
+
+    init();
+    </script>
+</body>
+</html>

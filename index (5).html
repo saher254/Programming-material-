@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6033212246748015" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6011L0T99F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6011L0T99F');
+    </script>
+    <meta name="google-site-verification" content="GAenrCsmmww2VcvqNYmXKVQdK8if9xp-OM_VnxMnObc" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنصة التعليمية لتانية بكالوريا ساهر</title>
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <meta name="description" content="منصة تعليمية مجانية لطلاب البكالوريا. شرح مواد العربي، البرمجة، الإنجليزي، التاريخ، ومنصة جافا سكريبت للتعلم مجاناً.">
+    <meta name="author" content="ساهر">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff; --text: #0f172a; --card: #ffffff; --accent: #4f46e5;
+            --accent-text: #ffffff; --border: #e2e8f0; --danger: #ef4444; --success: #10b981; --muted: #64748b;
+            --shadow: 0 10px 25px -5px rgba(0,0,0,0.05); --shadow-hover: 0 20px 30px -10px rgba(0,0,0,0.1);
+        }
+        body.dark {
+            --bg: #0b1120; --text: #f8fafc; --card: #1e293b; --accent: #1e1e2d;
+            --accent-text: #cbd5e1; --border: #334155; --muted: #94a3b8; 
+            --shadow: 0 10px 25px -5px rgba(0,0,0,0.5); --shadow-hover: 0 20px 30px -10px rgba(0,0,0,0.8);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background: var(--bg); color: var(--text); transition: background 0.4s, color 0.4s; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* الهيدر */
+        .main-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: var(--accent); color: var(--accent-text); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: 0.4s; }
+        .main-header h1 { font-size: 22px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 800; }
+        
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        .header-btn { background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 18px; width: 45px; height: 45px; border-radius: 12px; cursor: pointer; display: grid; place-items: center; transition: 0.3s; }
+        .header-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+
+        #themeToggle { width: 60px; height: 32px; border-radius: 50px; background: #ffffff; border: 2px solid #cbd5e1; position: relative; cursor: pointer; transition: all 0.4s ease; outline: none; display: flex; align-items: center; }
+        body.dark #themeToggle { background: #334155; border-color: #64748b; }
+        #themeToggle .icon { width: 24px; height: 24px; border-radius: 50%; background: #4f46e5; color: #fff; display: grid; place-items: center; font-size: 14px; position: absolute; right: 4px; transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1); }
+        body.dark #themeToggle .icon { right: 28px; background: #f59e0b; color: #fff; }
+        #themeToggle:hover { transform: scale(1.05); }
+
+        /* شريط المستخدم */
+        #userBar { background: #1e293b; color: #fff; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; border-bottom: 2px solid #4f46e5; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .user-name { background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s; }
+        .user-name:hover { background: rgba(255,255,255,0.2); }
+        .admin-badge { background: #10b981; color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
+        .logout-btn { background: #ef4444; color: #fff; border: none; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .logout-btn:hover { background: #dc2626; }
+
+        #adminBar { background: #0f172a; color: #fff; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; transition: 0.3s; }
+
+        .page { display: none; flex: 1; flex-direction: column; }
+        .page.active { display: flex; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .home-hero { text-align: center; margin: 40px auto 20px; padding: 0 20px; }
+        .home-hero h2 { font-size: 32px; font-weight: 900; color: var(--text); margin-bottom: 10px; }
+        .home-hero p { font-size: 16px; color: var(--muted); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+        
+        .learn-more-link { display: inline-block; margin-top: 10px; font-size: 16px; font-weight: bold; color: #3b82f6; cursor: pointer; text-decoration: underline; transition: 0.2s; }
+        .learn-more-link:hover { color: #2563eb; }
+
+        .sections-container { max-width: 800px; margin: 20px auto 30px; padding: 0 20px; display: flex; flex-direction: column; gap: 20px; width: 100%; }
+        
+        .subject-card { background: var(--card); padding: 30px 35px; border-radius: 24px; border: 1px solid var(--border); box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; }
+        .subject-card::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 8px; background: #4f46e5; border-radius: 0 24px 24px 0; }
+        .subject-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: #4f46e5; }
+        .subject-card:active { transform: scale(0.98); }
+        .subject-card h2 { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px; color: var(--text); }
+        .subject-card .arrow { font-size: 26px; color: #4f46e5; transition: 0.3s; background: rgba(79, 70, 229, 0.1); width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; }
+        .subject-card:hover .arrow { transform: translateX(-5px); background: #4f46e5; color: #fff; }
+
+        .embedded-header { display: flex; align-items: center; gap: 10px; padding: 10px 15px; background: var(--card); border-bottom: 1px solid var(--border); }
+        .back-btn-small { background: var(--border); border: none; color: var(--text); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; transition: 0.2s; }
+        .back-btn-small:hover { background: #4f46e5; color: #fff; }
+        .iframe-container { width: 100%; height: calc(100vh - 100px); border: none; flex: 1; background: var(--card); }
+
+        .page-header { max-width: 800px; margin: 30px auto 0; padding: 0 20px; display: flex; align-items: center; gap: 15px; }
+        .back-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 700; transition: 0.3s; box-shadow: var(--shadow); }
+        .back-btn:hover { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+        .page-title { font-size: 26px; color: var(--text); font-weight: 800; }
+
+        .content-area { max-width: 800px; margin: 25px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 20px; width: 100%; }
+        .content-item { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.3s; margin-bottom: 10px; }
+        .content-item .item-title { font-weight: 800; color: var(--text); margin-bottom: 15px; font-size: 20px; }
+        .content-item p { line-height: 1.8; font-size: 16px; white-space: pre-wrap; color: var(--muted); }
+        
+        .content-list { display: flex; flex-direction: column; gap: 20px; }
+
+        .media-container { margin-top: 15px; border-radius: 16px; overflow: hidden; background: #000; width: 100%; display: flex; justify-content: center; border: 1px solid var(--border); }
+        .media-container img, .media-container video { max-width: 100%; max-height: 500px; object-fit: contain; display: block; }
+        .media-container audio { width: 100%; display: block; margin: 10px 0; }
+        .media-container iframe { width: 100%; height: 500px; border: none; display: block; }
+
+        .admin-actions { margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--border); display: flex; gap: 10px; }
+        .btn-danger { background: var(--danger); color: #fff; border: none; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.2s; }
+        .btn-edit { background: #f59e0b; color: #fff; border: none; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.2s; }
+
+        .add-content-btn { background: linear-gradient(135deg, #4f46e5, #818cf8); color: #fff; border: none; padding: 18px; border-radius: 16px; font-size: 18px; font-weight: 800; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4); transition: 0.3s; margin-top: 10px; }
+        .add-content-btn:hover { transform: translateY(-3px); }
+
+        .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; backdrop-filter: blur(8px); }
+        .modal.active { display: flex; animation: fadeIn 0.3s; }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .modal-content h3 { color: var(--text); margin-bottom: 5px; font-size: 24px; font-weight: 800; }
+        .modal-content label { font-weight: 700; font-size: 14px; margin-bottom: -8px; color: var(--muted); }
+        .modal-content input, .modal-content textarea { padding: 14px 16px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; outline: none; transition: 0.3s; }
+        .modal-content input:focus, .modal-content textarea:focus { border-color: #4f46e5; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .modal-buttons button { flex: 1; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-size: 16px; font-weight: 800; transition: 0.3s; }
+        .btn-primary { background: #4f46e5; color: #fff; }
+        .btn-secondary { background: var(--border); color: var(--text); }
+
+        .loading { text-align: center; padding: 30px; color: #4f46e5; font-weight: bold; display: none; }
+        .empty-msg { text-align: center; padding: 40px; color: var(--muted); font-size: 18px; background: var(--card); border-radius: 20px; border: 1px dashed var(--border); }
+
+        .main-footer { 
+            text-align: center; padding: 20px; background: var(--card); border-top: 1px solid var(--border); margin-top: auto; 
+            flex: 1; display: flex; flex-direction: column; justify-content: flex-end; min-height: 120px;
+        }
+        .footer-contact-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--text); text-decoration: none; padding: 8px 20px; border-radius: 50px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; transition: 0.3s; }
+        .footer-contact-btn:hover { border-color: #10b981; color: #10b981; transform: translateY(-2px); }
+        
+        .profile-card { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 20px; }
+        .profile-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .profile-avatar { width: 60px; height: 60px; background: var(--accent); color: #fff; border-radius: 50%; display: grid; place-items: center; font-size: 30px; }
+        .profile-info h3 { font-size: 22px; color: var(--text); margin-bottom: 5px; }
+        .profile-info p { font-size: 14px; color: var(--muted); }
+        .profile-form { display: flex; flex-direction: column; gap: 10px; }
+
+        .about-text { line-height: 2; font-size: 17px; color: var(--text); }
+        body.dark .about-text { color: #e2e8f0; }
+        .about-text h2 { color: var(--accent); margin-bottom: 20px; }
+        body.dark .about-text h2 { color: #a78bfa; }
+        .about-text h3 { color: var(--accent); margin-bottom: 15px; margin-top: 25px; }
+        body.dark .about-text h3 { color: #a78bfa; }
+        .about-text ul { padding-right: 20px; margin-bottom: 20px; }
+        .about-text li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <script>
+    const currentPath = window.location.pathname;
+    
+    if (currentPath.includes('/.saher')) window.location.replace('https://saher254.github.io/');
+    if (currentPath.includes('/.com')) window.location.replace('https://saher254.github.io/');
+    if (currentPath.includes('/Learn')) window.location.replace('https://saher254.github.io/');
+    if (currentPath.includes('/JavaScript-') || currentPath.includes('/JavaScript')) window.location.replace('https://saher254.github.io/');
+    </script>
+    
+    <header class="main-header" id="mainHeader">
+        <h1 onclick="showPage('home')">🎓 منصة البكالوريا</h1>
+        <div class="header-actions">
+            <button class="header-btn" onclick="toggleSearch()" title="بحث">🔍</button>
+            <button id="themeToggle" title="تغيير المظهر">
+                <span class="icon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <div id="userBar">
+        <div class="user-info">
+            <span id="welcomeText" class="user-name" onclick="showPage('profile')">
+                👤 👋 أهلاً بك
+            </span>
+            <span id="adminBadge" class="admin-badge" style="display:none;">مدير</span>
+        </div>
+        <button class="logout-btn" onclick="if(confirm('هل تريد تسجيل الخروج؟')) confirmLogout();">🚪 تسجيل الخروج</button>
+    </div>
+
+    <div id="adminBar" style="display:none;"></div>
+
+    <!-- الصفحة الرئيسية -->
+    <div id="page-home" class="page active">
+        <div class="home-hero">
+            <h2>مرحباً بك في منصة البكالوريا 🚀</h2>
+            <p>بوابتك الشاملة لجميع المواد الدراسية. ابدأ رحلة التفوق والتميز الآن مع أفضل الشروحات والملخصات التعليمية، كل ما تحتاجه في مكان واحد!</p>
+            <span class="learn-more-link" onclick="showPage('about')">تعلم أكثر عن المنصة ←</span>
+        </div>
+
+        <div class="sections-container">
+            <div class="subject-card" onclick="openEmbedded('Arabic.html', '📖 مادة العربي')">
+                <h2>📖 مادة العربي</h2><span class="arrow">⬅️</span>
+            </div>
+            <div class="subject-card" onclick="openEmbedded('programming.html', '💻 مادة البرمجة')">
+                <h2>💻 مادة البرمجة</h2><span class="arrow">⬅️</span>
+            </div>
+            <div class="subject-card" onclick="openEmbedded('English.html', '🇬🇧 مادة الإنجليزي')">
+                <h2>🇬🇧 مادة الإنجليزي</h2><span class="arrow">⬅️</span>
+            </div>
+            <div class="subject-card" onclick="openEmbedded('History.html', '🏛️ مادة التاريخ')">
+                <h2>🏛️ مادة التاريخ</h2><span class="arrow">⬅️</span>
+            </div>
+            <div class="subject-card" onclick="openEmbedded('javascript.html', '🚀 منصة جافا سكريبت للتعلم مجاناً')">
+                <h2>🚀 منصة جافا سكريبت للتعلم مجاناً</h2><span class="arrow">⬅️</span>
+            </div>
+            
+            <div class="subject-card" onclick="openSubject('quiz', 'اسئله لجميع المواد')">
+                <h2>اسئله لجميع المواد</h2><span class="arrow">⬅️</span>
+            </div>
+            
+            <div class="subject-card" onclick="openEmbedded('test.html', '📝 اختبر نفسك (الاختبار الشامل)')">
+                <h2>📝 اختبر نفسك (الاختبار الشامل)</h2><span class="arrow">⬅️</span>
+            </div>
+
+            <div class="subject-card" onclick="window.location.href='money.html'">
+                 <h2>📈 المنصة المالية (محاكي التداول)</h2><span class="arrow">⬅️</span>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 0 auto 20px; max-width: 800px; padding: 0 20px;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6033212246748015"
+                 data-ad-slot="3731342857"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <footer class="main-footer">
+            <a href="tel:01024897145" class="footer-contact-btn">
+                <span>📞</span> ساهر للتواصل: 01024897145
+            </a>
+        </footer>
+    </div>
+
+    <!-- صفحة البحث -->
+    <div id="page-search" class="page">
+        <div style="max-width: 800px; margin: 30px auto; padding: 0 20px; width: 100%;">
+            <h2 style="text-align:center; color:var(--text); margin-bottom:20px; font-size:28px;">🔍 البحث في المنصة</h2>
+            <input type="text" id="searchInput" placeholder="اكتب اسم المادة اللي بتدور عليها..." oninput="performSearch()" style="width:100%; padding:15px 20px; border-radius:16px; border:2px solid var(--border); background:var(--card); color:var(--text); font-size:18px; outline:none; transition:0.3s; box-shadow:var(--shadow);">
+            <div id="searchResults" style="margin-top:25px; display:flex; flex-direction:column; gap:15px;"></div>
+        </div>
+    </div>
+    <!-- صفحة الملفات المدمجة -->
+<div id="page-embedded" class="page">
+    <div class="embedded-header">
+        <button class="back-btn-small" onclick="showPage('home')">🔙 رجوع</button>
+    </div>
+    <iframe id="embeddedFrame" class="iframe-container" sandbox="allow-scripts allow-forms allow-same-origin allow-modals allow-popups"></iframe>
+</div>
+
+<!-- صفحة اختبر نفسك -->
+<div id="page-subject" class="page">
+    <div class="page-header">
+        <button class="back-btn" onclick="showPage('home')">🔙 رجوع</button>
+        <h2 class="page-title" id="currentSubjectTitle"></h2>
+    </div>
+    
+    <div class="content-area">
+        <div id="loadingContent" class="loading">⏳ جارٍ التحميل...</div>
+        <div id="subjectContentList" class="content-list"></div>
+        
+        <button id="addContentBtn" class="add-content-btn" style="display:none;" onclick="openAddModal()">
+            ➕ إضافة سؤال / محتوى جديد
+        </button>
+    </div>
+</div>
+
+<!-- صفحة الحساب الشخصي -->
+<div id="page-profile" class="page">
+    <div class="page-header">
+        <button class="back-btn" onclick="showPage('home')">🔙 رجوع</button>
+        <h2 class="page-title">حسابي</h2>
+    </div>
+    
+    <div class="content-area">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-info">
+                    <h3 id="profileName">اسم الطالب</h3>
+                    <p id="profileRole">طالب</p>
+                </div>
+            </div>
+            
+            <h3 style="margin-bottom: 10px; font-size: 18px; color: var(--text);">✏️ تغيير البيانات</h3>
+            <div class="profile-form">
+                <label>الاسم الجديد:</label>
+                <input type="text" id="newName" placeholder="اكتب الاسم الجديد...">
+                <label>كلمة المرور الجديدة (اتركها فارغة إذا لا تريد التغيير):</label>
+                <input type="password" id="newPassword" placeholder="اكتب كلمة المرور الجديدة...">
+                <button class="btn-primary" onclick="updateProfile()" style="margin-top: 10px; width: 100%; padding: 12px;">💾 حفظ التعديلات</button>
+            </div>
+        </div>
+        
+        <div class="profile-card">
+            <h3 style="margin-bottom: 15px; font-size: 18px; color: var(--text);">📊 سجل النتائج</h3>
+            <div id="profileResults">
+                <p style="text-align:center; color: var(--muted);">جارٍ تحميل النتائج...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- صفحة عن المنصة -->
+<div id="page-about" class="page">
+    <div class="page-header">
+        <button class="back-btn" onclick="showPage('home')">🔙 رجوع</button>
+        <h2 class="page-title">عن المنصة</h2>
+    </div>
+    
+    <div class="content-area about-text">
+        <div class="content-item" style="padding: 30px;">
+            <h2>🎓 منصة البكالوريا التعليمية - ساهر</h2>
+            <p>أهلاً بك في <b>منصتك التعليمية الشاملة</b>، المكان اللي بيجمع كل اللي محتاجه طالب تانية بكالوريا في مكان واحد، وبطريقة سهلة ومريحة للعين.</p>
+            <p>المنصة دي اتصممت عشان تكون رفيقك في رحلة التفوق، مش مجرد موقع بيقدم دروس وخلاص.</p>
+            
+            <hr style="margin: 20px 0; border-color: var(--border);">
+            
+            <h3>🌟 إيه اللي بيميز منصتنا؟</h3>
+            <ul>
+                <li>📚 <b>كل المواد في مكان واحد:</b> العربي، البرمجة، الإنجليزي، والتاريخ، بالإضافة لمنصة جافا سكريبت للتعلم المجاني.</li>
+                <li>📝 <b>نظام "اختبر نفسك":</b> امتحانات تفاعلية بتصحح لنفسك، وبتوريك غلطك فين وصحك فين باللون الأحمر والأخضر.</li>
+                <li>👤 <b>حساب شخصي لكل طالب:</b> بنحفظ نتايجك وامتحاناتك في حسابك، عشان لو دخلت من أي جهاز تاني هتلاقي شغلك كله معاك.</li>
+                <li>🌙 <b>وضع ليلي ونهاري:</b> عشان عينك ترتاح وإنت بتذاكر، تقدر تنقل بين الوضعين في أي وقت.</li>
+                <li>📱 <b>تطبيق على الموبايل:</b> المنصة بتشتغل كتطبيق حقيقي على تليفونك، تقدر تثبتها على شاشة موبايلك بضغطة زرار.</li>
+                <li>🆓 <b>مجانية بالكامل:</b> كل المحتوى والامتحانات متاحة لجميع الطلاب بدون أي رسوم أو اشتراكات.</li>
+            </ul>
+
+            <hr style="margin: 20px 0; border-color: var(--border);">
+
+            <h3>🛠️ إزاي تبدأ تستخدم المنصة؟</h3>
+            <ol style="padding-right: 20px; margin-bottom: 20px;">
+                <li><b>سجل دخولك:</b> أول ما تفتح المنصة، هتحتاج تسجل اسمك.</li>
+                <li><b>اختر مادتك:</b> من الصفحة الرئيسية، هتلاقي أيقونات لكل المواد.</li>
+                <li><b>تصفح المحتوى:</b> هتلاقي الشروحات والملخصات والملفات جاهزة ومقسمة بشكل منظم.</li>
+                <li><b>اختبر نفسك:</b> في آخر الصفحة الرئيسية، هتلاقي زرار "اختبر نفسك".</li>
+                <li><b>تابع نتايجك:</b> دوس على "حسابي" عشان تشوف كل الامتحانات اللي حليتها ودرجاتك فيها.</li>
+            </ol>
+
+            <hr style="margin: 20px 0; border-color: var(--border);">
+
+            <h3>👑 للتواصل والدعم</h3>
+            <p>المنصة دي اتعملت بكل حب عشان تساعدك تتفوق. لو محتاج أي مساعدة، أو عندك أي استفسار، أنا موجود دايماً.</p>
+            <p><b>للتواصل:</b> 📞 <a href="tel:01024897145" style="color: var(--accent); font-weight: bold;">01024897145</a></p>
+
+            <hr style="margin: 20px 0; border-color: var(--border);">
+
+            <h3>💡 كلمة أخيرة</h3>
+            <p>إحنا هنا عشان نسهل عليك، ونخلي المذاكرة تجربة ممتعة ومثمرة. كل اللي عليك هو إنك تبدأ، وتستمر، وتفتكر دايماً إن <b>"مَعًا نحو مستقبلك"</b>. 🎓✨</p>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <b style="color: var(--accent);">منصة البكالوريا التعليمية - ساهر</b>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- المودالات -->
+<div id="adminLoginModal" class="modal">
+    <div class="modal-content">
+        <h3>🔐 أدخل كود المدير</h3>
+        <input type="password" id="adminCodeInput" placeholder="الكود السري" maxlength="20">
+        <div class="modal-buttons">
+            <button class="btn-primary" onclick="checkAdminCode()">دخول</button>
+            <button class="btn-secondary" onclick="closeModal('adminLoginModal')">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<div id="addContentModal" class="modal">
+    <div class="modal-content">
+        <h3>➕ إضافة محتوى</h3>
+        <label>العنوان:</label>
+        <input type="text" id="addTitle" placeholder="اكتب عنوان المحتوى هنا...">
+        <label>النص (اختياري):</label>
+        <textarea id="addText" rows="3" placeholder="اكتب النص هنا..."></textarea>
+        <label>رابط المحتوى (اختياري):</label>
+        <input type="text" id="addUrl" placeholder="https://...">
+        <div class="modal-buttons">
+            <button class="btn-primary" onclick="saveContent()">💾 حفظ ونشر</button>
+            <button class="btn-secondary" onclick="closeModal('addContentModal')">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<div id="editContentModal" class="modal">
+    <div class="modal-content">
+        <h3>✏️ تعديل المحتوى</h3>
+        <label>العنوان:</label>
+        <input type="text" id="editTitle">
+        <label>النص:</label>
+        <textarea id="editText" rows="3"></textarea>
+        <label>الرابط:</label>
+        <input type="text" id="editUrl">
+        <div class="modal-buttons">
+            <button class="btn-primary" onclick="saveEditContent()">💾 حفظ التعديل</button>
+            <button class="btn-secondary" onclick="closeModal('editContentModal')">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<div id="installAppModal" class="modal" style="z-index: 9999;">
+    <div class="modal-content" style="text-align: center; max-width: 350px;">
+        <div style="font-size: 50px; margin-bottom: 10px;">🎓</div>
+        <h3 style="font-size: 22px;">تثبيت التطبيق</h3>
+        <p style="margin-bottom: 20px; color: var(--muted); font-size: 15px;">قم بتثبيت تطبيق المنصة على جهازك للوصول السريع للدروس والامتحانات.</p>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-primary" id="customInstallBtn" style="padding: 12px; font-size: 16px; flex: 1;">تثبيت</button>
+            <button class="btn-secondary" onclick="closeModal('installAppModal')" style="padding: 12px; font-size: 16px; flex: 1;">لاحقاً</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDe5INvR_ifEARHmw7M0qqBQ34-G6z4p7w",
+        authDomain: "mansa-educational.firebaseapp.com",
+        projectId: "mansa-educational",
+        storageBucket: "mansa-educational.firebasestorage.app",
+        messagingSenderId: "144298769750",
+        appId: "1:144298769750:web:43eb0c63e5d2acb37baaf7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ✅ دالة إضافة إشعار
+    window.addNotification = async function(title, message, type = 'info', icon = '🔔') {
+        try {
+            await addDoc(collection(db, "notifications"), {
+                title: title,
+                message: message,
+                type: type,
+                icon: icon,
+                createdAt: Date.now()
+            });
+            console.log('✅ إشعار اتحفظ:', title);
+        } catch(e) {
+            console.error('❌ خطأ في حفظ الإشعار:', e);
+        }
+    };
+    
+    const SECRET_CODE = "01024897145";
+    let isAdmin = false;
+    let currentSubject = "";
+    let currentItems = [];
+    let editingItemId = null;
+    let currentUser = null;
+
+    const subjectsData = [
+        { title: '📖 مادة العربي', file: 'Arabic.html' },
+        { title: '💻 مادة البرمجة', file: 'programming.html' },
+        { title: '🇬🇧 مادة الإنجليزي', file: 'English.html' },
+        { title: '🏛️ مادة التاريخ', file: 'History.html' },
+        { title: '🚀 منصة جافا سكريبت للتعلم مجاناً', file: 'javascript.html' },
+        { title: 'اسئله لجميع المواد', file: 'quiz' },
+        { title: '📝 اختبر نفسك (الاختبار الشامل)', file: 'test.html' }
+    ];
+
+    window.performSearch = function() {
+        const term = document.getElementById('searchInput').value.trim().toLowerCase();
+        const resultsDiv = document.getElementById('searchResults');
+        
+        if (!term) {
+            resultsDiv.innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
+            return;
+        }
+        const matches = subjectsData.filter(sub => sub.title.toLowerCase().includes(term));
+        if (matches.length === 0) {
+            resultsDiv.innerHTML = '<p style="text-align:center; color:var(--danger); font-weight:bold;">لا توجد نتائج.</p>';
+            return;
+        }
+        resultsDiv.innerHTML = matches.map(sub => `
+            <div class="subject-card" onclick="${sub.file === 'quiz' ? `openSubject('quiz', '${sub.title}')` : `openEmbedded('${sub.file}', '${sub.title}')`}">
+                <h2>${sub.title}</h2><span class="arrow">⬅️</span>
+            </div>
+        `).join('');
+    };
+
+    window.toggleSearch = function() {
+        const searchPage = document.getElementById('page-search');
+        if (searchPage.classList.contains('active')) { showPage('home'); } else { showPage('search'); }
+    };
+
+    function checkUserSession() {
+        const userStr = localStorage.getItem('bakaloria_user');
+        if (!userStr) {
+            window.location.href = 'login.html';
+            return; 
+        }
+        currentUser = JSON.parse(userStr);
+        const userBar = document.getElementById('userBar');
+        const welcomeText = document.getElementById('welcomeText');
+        const adminBadge = document.getElementById('adminBadge');
+
+        welcomeText.innerHTML = '👤 👋 أهلاً، ' + currentUser.username;
+        userBar.style.display = 'flex';
+
+        if (currentUser.role === 'admin') {
+            adminBadge.style.display = 'inline-block';
+            isAdmin = true; 
+            localStorage.setItem('bakaloria_admin', 'true');
+        } else {
+            isAdmin = false;
+            localStorage.removeItem('bakaloria_admin');
+        }
+        updateAdminUI();
+    }
+
+    window.confirmLogout = function() {
+        if (confirm("هل تريد تسجيل الخروج؟")) {
+            localStorage.removeItem('bakaloria_user');
+            localStorage.removeItem('bakaloria_admin');
+            window.location.href = 'login.html';
+        }
+    };
+
+    const clickSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
+    clickSound.volume = 0.4;
+
+    let themeClicks = 0;
+    let clickTimer = null;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('.icon');
+    const mainHeader = document.getElementById('mainHeader');
+
+    if (localStorage.getItem('bakaloria_theme') === 'dark') {
+        document.body.classList.add('dark');
+        themeIcon.textContent = '☀️';
+    }
+
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        const isDark = document.body.classList.contains('dark');
+        themeIcon.textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('bakaloria_theme', isDark ? 'dark' : 'light');
+
+        themeClicks++;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => { themeClicks = 0; }, 2000);
+
+        if (themeClicks >= 10) {
+            themeClicks = 0;
+            if (isAdmin) logoutAdmin();
+            else openModal('adminLoginModal');
+        }
+    });
+
+    window.checkAdminCode = function() {
+        const val = document.getElementById('adminCodeInput').value.trim();
+        if (val && val === SECRET_CODE) {
+            isAdmin = true;
+            localStorage.setItem('bakaloria_admin', 'true');
+            closeModal('adminLoginModal');
+            document.getElementById('adminCodeInput').value = '';
+            updateAdminUI();
+            alert('✅ تم تفعيل وضع المدير');
+        } else { alert('❌ الكود غير صحيح'); }
+    };
+
+    window.logoutAdmin = function() {
+        if (!confirm('هل تريد الخروج من وضع المدير؟')) return;
+        isAdmin = false;
+        localStorage.removeItem('bakaloria_admin');
+        updateAdminUI();
+    };
+
+    function updateAdminUI() {
+        document.getElementById('adminBar').style.display = isAdmin ? 'flex' : 'none';
+        document.getElementById('addContentBtn').style.display = isAdmin ? 'flex' : 'none';
+        if (currentSubject) renderSubjectContent();
+    }
+
+    window.showPage = function(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + pageId).classList.add('active');
+        
+        if (pageId === 'home' || pageId === 'search' || pageId === 'profile' || pageId === 'about') {
+            mainHeader.style.display = 'flex';
+            const hasUser = localStorage.getItem('bakaloria_user');
+            document.getElementById('userBar').style.display = hasUser ? 'flex' : 'none';
+        } else {
+            mainHeader.style.display = 'none';
+            document.getElementById('userBar').style.display = 'none';
+        }
+        
+        if (pageId === 'search') {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
+            setTimeout(() => document.getElementById('searchInput').focus(), 100);
+        }
+
+        if (pageId === 'profile') {
+            loadProfilePage();
+        }
+
+        if (pageId === 'home') {
+            setTimeout(() => {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) { console.log('Ad error'); }
+            }, 500);
+        }
+        
+        window.scrollTo(0, 0);
+    };
+            window.openEmbedded = function(fileName, title) {
+            clickSound.play().catch(e => console.log("الصوت اتمنع"));
+            const frame = document.getElementById('embeddedFrame');
+            frame.src = fileName; 
+            showPage('embedded');
+        };
+
+        window.openSubject = function(subjectId, title) {
+            clickSound.play().catch(e => console.log("الصوت اتمنع"));
+            currentSubject = subjectId;
+            document.getElementById('currentSubjectTitle').textContent = title;
+            showPage('subject');
+            loadSubjectContent();
+        };
+
+        window.loadSubjectContent = async function() {
+            const list = document.getElementById('subjectContentList');
+            const loader = document.getElementById('loadingContent');
+            list.innerHTML = '';
+            loader.style.display = 'block';
+
+            try {
+                const q = query(collection(db, "content"), where("subject", "==", currentSubject));
+                const snapshot = await getDocs(q);
+                currentItems = [];
+                snapshot.forEach(doc => { currentItems.push({ id: doc.id, ...doc.data() }); });
+                currentItems.sort((a, b) => a.createdAt - b.createdAt);
+                renderSubjectContent();
+            } catch (e) {
+                console.error(e);
+                list.innerHTML = '<p class="empty-msg" style="color:var(--danger);">حدث خطأ في تحميل البيانات.</p>';
+            } finally {
+                loader.style.display = 'none';
+            }
+        };
+
+        function getMediaHtml(url, title) {
+            if (!url) return '';
+            let u = url.toLowerCase();
+            
+            if (!u.includes('.pdf') && !u.includes('drive.google.com') && !u.includes('youtube.com') && !u.includes('youtu.be') && !u.match(/\.(mp4|webm|ogg|mov|mp3|wav|ogg|m4a)$/)) {
+                return `<div style="position: relative; margin-top: 15px;"><div class="media-container" style="background: transparent; border: none;"><img src="${url}" alt="${title}" style="max-width: 100%; border-radius: 12px;"></div><a href="${url}" target="_blank" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; text-decoration: none; font-size: 20px;">⤢</a></div>`;
+            }
+            if (u.match(/\.(mp4|webm|ogg|mov)$/) != null) return `<div class="media-container"><video controls src="${url}"></video></div>`;
+            if (u.match(/\.(mp3|wav|ogg|m4a)$/) != null) return `<div class="media-container" style="background:transparent; border:none;"><audio controls src="${url}"></audio></div>`;
+            if (u.includes('youtube.com') || u.includes('youtu.be')) {
+                let vidId = u.includes('youtu.be') ? u.split('/').pop().split('?')[0] : new URLSearchParams(new URL(url).search).get('v');
+                if (vidId) return `<div class="media-container"><iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe></div>`;
+            }
+            if (u.includes('.pdf') || u.includes('drive.google.com')) {
+                let finalUrl = url;
+                if (u.includes('drive.google.com')) {
+                    let fileId = u.includes('/file/d/') ? url.split('/file/d/')[1].split('/')[0] : url.split('id=')[1]?.split('&')[0];
+                    if (fileId) finalUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                }
+                return `<div style="position: relative; margin-top: 15px;"><div class="media-container" style="height: 500px; overflow: hidden; background: #fff;"><iframe src="${finalUrl}" style="width: 100%; height: 100%; border: none;"></iframe></div><a href="${url}" target="_blank" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; text-decoration: none; font-size: 20px;">⤢</a></div>`;
+            }
+            return `<a href="${url}" target="_blank" style="display:inline-block;margin-top:15px;background:#4f46e5;color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:800;">🔗 فتح الرابط</a>`;
+        }
+
+        function renderSubjectContent() {
+            const list = document.getElementById('subjectContentList');
+            if (currentItems.length === 0) { list.innerHTML = '<p class="empty-msg">لا يوجد محتوى بعد.</p>'; return; }
+            
+            list.innerHTML = currentItems.map(item => {
+                const adminBtns = isAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="openEditModal('${item.id}')">✏️ تعديل</button><button class="btn-danger" onclick="deleteContent('${item.id}')">🗑️ حذف</button></div>` : '';
+                return `<div class="content-item"><div class="item-title">${item.title}</div>${item.text ? `<p>${item.text}</p>` : ''}${getMediaHtml(item.url, item.title)}${adminBtns}</div>`;
+            }).join('');
+        }
+
+        window.openAddModal = function() {
+            document.getElementById('addTitle').value = '';
+            document.getElementById('addText').value = '';
+            document.getElementById('addUrl').value = '';
+            openModal('addContentModal');
+        };
+
+        window.saveContent = async function() {
+            const title = document.getElementById('addTitle').value.trim();
+            const text = document.getElementById('addText').value.trim();
+            const url = document.getElementById('addUrl').value.trim();
+            if (!title) return alert('⚠️ اكتب عنوان المحتوى');
+            if (!text && !url) return alert('⚠️ اكتب نصاً أو رابطاً');
+            
+            const btn = document.querySelector('#addContentModal .btn-primary');
+            btn.textContent = '⏳...'; btn.disabled = true;
+            try {
+                await addDoc(collection(db, "content"), { subject: currentSubject, title, text, url, createdAt: Date.now() });
+                closeModal('addContentModal'); loadSubjectContent(); alert('✅ تم النشر');
+            } catch (e) { alert('❌ خطأ: ' + e.message); } finally { btn.textContent = '💾 حفظ ونشر'; btn.disabled = false; }
+        };
+
+        window.deleteContent = async function(id) {
+            if (!confirm('متأكد من الحذف؟')) return;
+            await deleteDoc(doc(db, "content", id)); loadSubjectContent();
+        };
+
+        window.openEditModal = function(id) {
+            const item = currentItems.find(i => i.id === id); if (!item) return;
+            editingItemId = id;
+            document.getElementById('editTitle').value = item.title;
+            document.getElementById('editText').value = item.text || '';
+            document.getElementById('editUrl').value = item.url || '';
+            openModal('editContentModal');
+        };
+
+        window.saveEditContent = async function() {
+            if (!editingItemId) return;
+            const newTitle = document.getElementById('editTitle').value.trim();
+            if (!newTitle) return alert('العنوان مطلوب');
+            try {
+                await updateDoc(doc(db, "content", editingItemId), {
+                    title: newTitle,
+                    text: document.getElementById('editText').value.trim(),
+                    url: document.getElementById('editUrl').value.trim()
+                });
+                closeModal('editContentModal'); loadSubjectContent();
+            } catch (e) { alert('خطأ: ' + e.message); }
+        };
+
+        async function loadProfilePage() {
+            if (!currentUser) return;
+            
+            document.getElementById('profileName').textContent = currentUser.username;
+            document.getElementById('profileRole').textContent = currentUser.role === 'admin' ? 'مدير المنصة' : 'طالب';
+            document.getElementById('newName').value = currentUser.username;
+            document.getElementById('newPassword').value = '';
+
+            const resultsDiv = document.getElementById('profileResults');
+            resultsDiv.innerHTML = '<p style="text-align:center; color: var(--muted);">جارٍ تحميل النتائج...</p>';
+            
+            try {
+                const q = query(collection(db, "exam_results"), where("userId", "==", currentUser.id));
+                const snapshot = await getDocs(q);
+                
+                let rankInfo = null;
+                try {
+                    const lbSnap = await getDocs(collection(db, "leaderboard"));
+                    const players = [];
+                    lbSnap.forEach(d => {
+                        const data = d.data();
+                        players.push({
+                            userId: data.userId,
+                            name: data.name,
+                            wealth: data.wealth || 0,
+                            round: data.round || 1
+                        });
+                    });
+                    players.forEach(p => {
+                        const roundPenalty = 1 - (p.round * 0.02);
+                        p.score = p.wealth * Math.max(roundPenalty, 0.5);
+                    });
+                    players.sort((a, b) => b.score - a.score);
+                    const myIndex = players.findIndex(p => p.userId === currentUser.id);
+                    if (myIndex !== -1) {
+                        rankInfo = {
+                            rank: myIndex + 1,
+                            total: players.length,
+                            score: players[myIndex].score,
+                            wealth: players[myIndex].wealth,
+                            round: players[myIndex].round
+                        };
+                    }
+                } catch(e) { console.error('Leaderboard rank error:', e); }
+
+                let html = '';
+
+                if (rankInfo) {
+                    const rankColor = rankInfo.rank === 1 ? '#ffd700' : rankInfo.rank === 2 ? '#c0c0c0' : rankInfo.rank === 3 ? '#cd7f32' : '#4f46e5';
+                    const medal = rankInfo.rank === 1 ? '🥇' : rankInfo.rank === 2 ? '🥈' : rankInfo.rank === 3 ? '🥉' : '🏆';
+                    html += `
+                        <div class="stats-card" style="border: 2px solid ${rankColor}; background: linear-gradient(135deg, rgba(79,70,229,0.05), rgba(79,70,229,0.15)); margin-bottom: 15px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="color: ${rankColor}; font-size: 18px;">${medal} مركزك في لوحة الصدارة</h3>
+                                <p style="font-size: 13px; color: var(--muted); margin-top: 5px;">
+                                    💰 الثروة: $${rankInfo.wealth.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} · 
+                                    🔄 الجولات: ${rankInfo.round} · 
+                                    ⭐ النقاط: ${rankInfo.score.toFixed(0)}
+                                </p>
+                            </div>
+                            <div style="color: ${rankColor}; font-size: 28px; font-weight: 900;">
+                                ${rankInfo.rank} <span style="font-size: 14px; color: var(--muted);">/ ${rankInfo.total}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="stats-card" style="border: 2px dashed var(--border); background: transparent; margin-bottom: 15px; padding: 15px; border-radius: 12px;">
+                            <h3 style="color: var(--muted); font-size: 16px;">🏆 مركزك في لوحة الصدارة</h3>
+                            <p style="font-size: 13px; color: var(--muted); margin-top: 5px;">لم تلعب محاكي التداول بعد — ابدأ اللعب لتظهر في لوحة الصدارة!</p>
+                        </div>
+                    `;
+                }
+
+                if (snapshot.empty) {
+                    html += '<p style="text-align:center; color: var(--muted); margin-top: 15px;">لم تحل أي امتحانات حتى الآن.</p>';
+                } else {
+                    const results = [];
+                    snapshot.forEach(doc => results.push(doc.data()));
+                    results.sort((a,b) => b.timestamp - a.timestamp);
+                    
+                    html += '<h3 style="font-size: 16px; color: var(--text); margin: 20px 0 10px;">📝 نتائج الامتحانات</h3>';
+                    html += results.map(item => {
+                        const percentage = (item.score / item.total) * 100;
+                        const scoreClass = percentage >= 50 ? '' : 'bad';
+                        return `<div class="stats-card" style="padding: 15px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;"><div><h3>${item.examTitle}</h3><p style="font-size:12px; color:var(--muted); margin-top:5px;">${item.date}</p></div><div style="color: ${percentage >= 50 ? 'var(--success)' : 'var(--danger)'}; font-weight: bold; font-size: 18px;">${item.score} / ${item.total}</div></div>`;
+                    }).join('');
+                }
+
+                resultsDiv.innerHTML = html;
+            } catch (e) {
+                resultsDiv.innerHTML = '<p style="color:red; text-align:center;">حدث خطأ في تحميل النتائج.</p>';
+            }
+        }
+
+        window.updateProfile = async function() {
+            if (!currentUser) return;
+            
+            const newName = document.getElementById('newName').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            
+            if (!newName) return alert("الاسم لا يمكن أن يكون فارغاً!");
+            
+            try {
+                const userRef = doc(db, "students", currentUser.id);
+                const updateData = { username: newName };
+                if (newPassword) updateData.password = newPassword;
+                
+                await updateDoc(userRef, updateData);
+                
+                currentUser.username = newName;
+                localStorage.setItem('bakaloria_user', JSON.stringify(currentUser));
+                
+                document.getElementById('welcomeText').innerHTML = '👤 👋 أهلاً، ' + newName;
+                document.getElementById('profileName').textContent = newName;
+                document.getElementById('newPassword').value = '';
+                
+                alert("✅ تم تحديث البيانات بنجاح!");
+            } catch (e) {
+                alert("❌ حدث خطأ: " + e.message);
+            }
+        };
+
+        window.openModal = function(id) { document.getElementById(id).classList.add('active'); };
+        window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            checkUserSession(); 
+            document.getElementById('searchResults').innerHTML = '<p style="text-align:center; color:var(--muted);">ابدأ بكتابة اسم المادة للبحث...</p>';
+            
+            setTimeout(() => {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            }, 1000);
+        });
+
+        // كود إشعار تثبيت التطبيق
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            setTimeout(() => {
+                document.getElementById('installAppModal').classList.add('active');
+            }, 3000);
+        });
+
+        document.getElementById('customInstallBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') { console.log('تم التثبيت'); }
+                deferredPrompt = null;
+                closeModal('installAppModal');
+            }
+        });
+    </script>
+
+    <!-- ✅ نظام الإشعارات -->
+    <script type="module" src="push-notifications.js"></script>
+</body>
+</html>

@@ -1,115 +1,52 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-    <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6033212246748015" crossorigin="anonymous"></script>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول | منصة البكالوريا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    :root { --bg: #f8fafc; --text: #0f172a; --card: #ffffff; --accent: #4f46e5; --border: #e2e8f0; --danger: #ef4444; --muted: #64748b; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: radial-gradient(circle at top right, rgba(79, 70, 229, 0.1), transparent 40%), radial-gradient(circle at bottom left, rgba(79, 70, 229, 0.05), transparent 40%); }
+    
+    .login-card { background: var(--card); padding: 40px 30px; border-radius: 24px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+    .icon { font-size: 50px; margin-bottom: 15px; }
+    h1 { font-size: 26px; font-weight: 900; margin-bottom: 8px; color: var(--accent); }
+    p { color: var(--muted); font-size: 14px; margin-bottom: 25px; }
+    input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 16px; outline: none; transition: 0.3s; }
+    input:focus { border-color: var(--accent); }
+    button { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--accent); color: white; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button:hover { background: #4338ca; transform: translateY(-2px); }
+    .toggle-link { display: block; margin-top: 15px; color: var(--accent); font-weight: 700; cursor: pointer; font-size: 14px; }
+    .error-msg { color: var(--danger); font-size: 14px; margin-top: 15px; font-weight: 700; display: none; }
+    
+    .main-footer { margin-top: 30px; text-align: center; }
+    .main-footer a { color: var(--muted); text-decoration: none; font-weight: 700; font-size: 14px; padding: 10px 20px; border: 1px solid var(--border); border-radius: 50px; transition: 0.3s; }
+    .main-footer a:hover { color: var(--accent); border-color: var(--accent); }
 
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6011L0T99F"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    /* ✅ فاصل "أو" */
+    .divider { display: flex; align-items: center; gap: 10px; margin: 20px 0; }
+    .divider hr { flex: 1; border: none; border-top: 1px solid var(--border); }
+    .divider span { color: var(--muted); font-size: 14px; }
 
-  gtag('config', 'G-6011L0T99F');
-</script>
-
-    <meta charset="UTF-8">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>المنصه التعليميه لتانيه بكالوريا ساهر</title>
-    <link rel="icon" type="image/png" href="logo.png">
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root { 
-            --bg: #f8fafc; --text: #0f172a; --card: #ffffff; --accent: #4f46e5; 
-            --border: #e2e8f0; --danger: #ef4444; --muted: #64748b; 
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            background-image: radial-gradient(circle at top right, rgba(79, 70, 229, 0.1), transparent 40%), radial-gradient(circle at bottom left, rgba(79, 70, 229, 0.05), transparent 40%);
-            padding: 20px;
-        }
-        
-        .login-card { 
-            background: var(--card); 
-            padding: 40px 30px; 
-            border-radius: 24px; 
-            width: 100%; 
-            max-width: 420px; 
-            text-align: center; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08); 
-            border: 1px solid var(--border); 
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .icon { font-size: 50px; margin-bottom: 15px; display: inline-block; }
-        h1 { font-size: 26px; font-weight: 900; margin-bottom: 8px; color: var(--accent); }
-        p { color: var(--muted); font-size: 14px; margin-bottom: 25px; }
-        
-        input { 
-            width: 100%; 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            border-radius: 12px; 
-            border: 2px solid var(--border); 
-            background: var(--bg); 
-            color: var(--text); 
-            font-size: 16px; 
-            outline: none; 
-            transition: 0.3s; 
-            text-align: right;
-        }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
-        
-        button { 
-            width: 100%; 
-            padding: 15px; 
-            border-radius: 12px; 
-            border: none; 
-            background: var(--accent); 
-            color: white; 
-            font-size: 18px; 
-            font-weight: 800; 
-            cursor: pointer; 
-            transition: 0.3s; 
-        }
-        button:hover { background: #4338ca; transform: translateY(-2px); }
-        
-        .toggle-link { display: block; margin-top: 15px; color: var(--accent); font-weight: 700; cursor: pointer; font-size: 14px; }
-        .toggle-link:hover { text-decoration: underline; }
-        
-        .error-msg { color: var(--danger); font-size: 14px; margin-top: 15px; font-weight: 700; display: none; }
-        
-        .main-footer { margin-top: 30px; text-align: center; }
-        .main-footer a { 
-            color: var(--muted); 
-            text-decoration: none; 
-            font-weight: 700; 
-            font-size: 14px; 
-            padding: 10px 20px; 
-            border: 1px solid var(--border); 
-            border-radius: 50px; 
-            transition: 0.3s; 
-            display: inline-block;
-        }
-        .main-footer a:hover { color: var(--accent); border-color: var(--accent); }
-    </style>
+    /* ✅ زر Google */
+    .google-btn {
+        background: #fff;
+        color: #333;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .google-btn:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-2px); }
+    .google-btn svg { width: 20px; height: 20px; }
+</style>
 </head>
 <script>
-    // الكود ده بيخلي المنصة تفتح على الوضع النهاري (الأبيض) أول مرة
     if (!localStorage.getItem('bakaloria_theme')) {
         localStorage.setItem('bakaloria_theme', 'light');
     }
@@ -117,26 +54,40 @@
 <body>
 
     <div class="login-card">
-    <div class="icon" id="formIcon">🎓</div>
-    <h1 id="formTitle">إنشاء حساب جديد</h1>
-    <p id="formSubtitle">سجل اسمك وكلمة مرور للانضمام إلينا</p>
-    
-    <input type="text" id="username" placeholder="الاسم" autocomplete="off">
-    <input type="password" id="password" placeholder="كلمة المرور" autocomplete="off">
-    
-    <button onclick="handleLogin()" id="submitBtn">إنشاء حساب</button>
-    <span class="toggle-link" onclick="toggleForm()" id="toggleBtn">لديك حساب بالفعل؟ سجل الدخول</span>
-    
-    <div class="error-msg" id="errorMsg"></div>
+        <div class="icon" id="formIcon">🎓</div>
+        <h1 id="formTitle">تسجيل الدخول</h1>
+        <p id="formSubtitle">أدخل اسمك وكلمة المرور للدخول إلى المنصة</p>
+        
+        <input type="text" id="username" placeholder="الاسم" autocomplete="off">
+        <input type="password" id="password" placeholder="كلمة المرور" autocomplete="off">
+        
+        <button onclick="handleLogin()" id="submitBtn">دخول</button>
+        <span class="toggle-link" onclick="toggleForm()" id="toggleBtn">ليس لديك حساب؟ سجل الآن</span>
+
+        <!-- ✅ فاصل "أو" -->
+        <div class="divider">
+            <hr>
+            <span>أو</span>
+            <hr>
+        </div>
+
+        <!-- ✅ زر Google -->
+        <button onclick="handleGoogleLogin()" id="googleBtn" class="google-btn">
+            <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+            تسجيل الدخول باستخدام Google
+        </button>
+        
+        <div class="error-msg" id="errorMsg"></div>
     </div>
 
+    <!-- الفوتر -->
     <footer class="main-footer">
         <a href="tel:01024897145">📞 ساهر للتواصل: 01024897145</a>
     </footer>
-
-    <script type="module">
+        <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDe5INvR_ifEARHmw7M0qqBQ34-G6z4p7w",
@@ -150,7 +101,7 @@
         const app = initializeApp(firebaseConfig, "loginApp");
         const db = getFirestore(app);
 
-       let isLoginMode = false;
+        let isLoginMode = true;
 
         window.toggleForm = function() {
             isLoginMode = !isLoginMode;
@@ -241,9 +192,71 @@
             }
         };
 
-        document.getElementById('password').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') handleLogin();
-        });
+        // ✅ تسجيل الدخول بـ Google
+        window.handleGoogleLogin = async function() {
+            const btn = document.getElementById('googleBtn');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            btn.innerHTML = '⏳ جاري الاتصال بـ Google...';
+            btn.disabled = true;
+            errorMsg.style.display = 'none';
+
+            try {
+                const auth = getAuth(app);
+                const provider = new GoogleAuthProvider();
+                
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // ✅ التحقق لو المستخدم موجود في Firestore
+                const userRef = collection(db, "students");
+                const q = query(userRef, where("email", "==", user.email));
+                const snapshot = await getDocs(q);
+                
+                let userId, username, role;
+                
+                if (snapshot.empty) {
+                    // مستخدم جديد → ضيفه
+                    const newDoc = await addDoc(userRef, {
+                        username: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        role: 'student',
+                        photoURL: user.photoURL,
+                        provider: 'google',
+                        createdAt: Date.now()
+                    });
+                    userId = newDoc.id;
+                    username = user.displayName || user.email.split('@')[0];
+                    role = 'student';
+                } else {
+                    // مستخدم موجود
+                    const userDoc = snapshot.docs[0];
+                    const userData = userDoc.data();
+                    userId = userDoc.id;
+                    username = userData.username;
+                    role = userData.role;
+                }
+                
+                localStorage.setItem('bakaloria_user', JSON.stringify({ 
+                    id: userId, 
+                    username: username, 
+                    role: role 
+                }));
+                
+                if (role === 'admin') {
+                    localStorage.setItem('bakaloria_admin', 'true');
+                }
+                
+                window.location.href = 'index.html';
+                
+            } catch (error) {
+                console.error('Google login error:', error);
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = '❌ فشل تسجيل الدخول بـ Google: ' + error.message;
+                btn.innerHTML = '<svg viewBox="0 0 48 48" style="width:20px;height:20px;"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg> تسجيل الدخول باستخدام Google';
+                btn.disabled = false;
+            }
+        };
     </script>
 </body>
 </html>

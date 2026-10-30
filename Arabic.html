@@ -31,7 +31,7 @@
     .btn-small { padding: 5px 10px; font-size: 12px; }
     .hidden { display: none !important; }
 
-    /* 🌟 صفحة الوحدات (مستطيلات عريضة تحت بعض) */
+    /* 🌟 صفحة الوحدات */
     #page-units { display: flex; flex-direction: column; gap: 15px; width: 100%; }
     .unit-card { 
         background: var(--card); border: 2px solid var(--border); border-radius: 20px; 
@@ -85,7 +85,15 @@
             <select id="contentLesson"><option value="">اختر الدرس...</option></select>
             <input id="itemTitle" placeholder="عنوان المحتوى">
             <textarea id="itemText" rows="2" placeholder="النص (اختياري)..."></textarea>
-            <input id="itemUrl" type="url" placeholder="رابط صورة، فيديو، أو PDF (اختياري)...">
+            
+            <!-- ✅ التعديل هنا: خانة نوع الرابط -->
+            <label style="display:block; margin-bottom:5px; font-weight:bold; font-size:14px; color:var(--text);">نوع الملف/الرابط:</label>
+            <select id="itemType" style="margin-bottom:10px;">
+                <option value="light">خفيف (يفتح داخل المنصة زي الصور والفيديوهات)</option>
+                <option value="heavy">تقيل (ملفات PDF كبيرة - تحميل فقط)</option>
+            </select>
+
+            <input id="itemUrl" type="url" placeholder="ضع الرابط هنا (صورة، فيديو، أو PDF)...">
             <button id="addItemBtn" class="btn-primary">💾 حفظ</button>
         </section>
 
@@ -100,8 +108,7 @@
         </div>
 
     </div>
-
-    <script type="module">
+        <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
@@ -163,7 +170,6 @@
         }
         document.getElementById('contentUnit').addEventListener('change', fillLessonSelector);
 
-        // 🌟 عرض الوحدات (مستطيلات عريضة تحت بعض)
         function renderUnitsPage() {
             const container = document.getElementById('page-units');
             container.innerHTML = '';
@@ -194,7 +200,6 @@
             });
         }
 
-        // نقل الشاشة لصفحة الدروس
         window.openUnit = function(unitId, unitTitle) {
             selectedUnitId = unitId;
             document.getElementById('currentUnitTitle').textContent = "📖 " + unitTitle;
@@ -204,7 +209,6 @@
             window.scrollTo(0, 0);
         };
 
-        // الرجوع لصفحة الوحدات
         window.showUnitsPage = function() {
             selectedUnitId = null;
             document.getElementById('page-lessons').style.display = 'none';
@@ -212,7 +216,6 @@
             window.scrollTo(0, 0);
         };
 
-        // عرض دروس الوحدة
         function renderLessonsPage(unitId) {
             const container = document.getElementById('lessonsContainer');
             container.innerHTML = '';
@@ -250,7 +253,7 @@
                             </div>` : ''}
                         </div>
                         ${item.text ? `<div class="content-text">${item.text}</div>` : ''}
-                        ${getMediaHtml(item.url, item.title)}
+                        ${getMediaHtml(item.url, item.title, item.itemType)}
                     </div>`;
                 });
                 box.innerHTML = html;
@@ -259,25 +262,24 @@
         }
 
         async function addRecord(data) {
-    if (!isAdmin) return alert("سجل دخول كمدير أولاً.");
-    try {
-        await addDoc(contentRef, { ...data, subject: "arabic", createdAt: Date.now() });
+            if (!isAdmin) return alert("سجل دخول كمدير أولاً.");
+            try {
+                await addDoc(contentRef, { ...data, subject: "arabic", createdAt: Date.now() });
 
-        // ✅ إشعار تلقائي
-        const kindName = data.kind === 'unit' ? 'وحدة جديدة' : data.kind === 'lesson' ? 'درس جديد' : 'محتوى جديد';
-        const icon = data.kind === 'unit' ? '📘' : data.kind === 'lesson' ? '📝' : '🔹';
-        await addDoc(collection(db, "notifications"), {
-            title: `${icon} ${kindName}`,
-            message: `تمت إضافة "${data.title}" في مادة العربي`,
-            type: 'success',
-            icon: icon,
-            createdAt: Date.now()
-        });
+                const kindName = data.kind === 'unit' ? 'وحدة جديدة' : data.kind === 'lesson' ? 'درس جديد' : 'محتوى جديد';
+                const icon = data.kind === 'unit' ? '📘' : data.kind === 'lesson' ? '📝' : '🔹';
+                await addDoc(collection(db, "notifications"), {
+                    title: `${icon} ${kindName}`,
+                    message: `تمت إضافة "${data.title}" في مادة العربي`,
+                    type: 'success',
+                    icon: icon,
+                    createdAt: Date.now()
+                });
 
-        await loadData();
-        return true;
-    } catch (e) { alert("خطأ: " + e.message); return false; }
-}
+                await loadData();
+                return true;
+            } catch (e) { alert("خطأ: " + e.message); return false; }
+        }
 
         document.getElementById('addUnitBtn').addEventListener('click', async () => {
             const title = document.getElementById('unitName').value.trim();
@@ -301,105 +303,126 @@
             const title = document.getElementById('itemTitle').value.trim();
             const text = document.getElementById('itemText').value.trim();
             const url = document.getElementById('itemUrl').value.trim();
+            const itemType = document.getElementById('itemType').value; // ✅ قراءة نوع الملف
             if (!parentId || !title || (!text && !url)) return alert("اكمل البيانات");
-            if (await addRecord({ kind: "item", parentId, title, text, url })) {
+            if (await addRecord({ kind: "item", parentId, title, text, url, itemType })) {
                 document.getElementById('itemTitle').value = "";
                 document.getElementById('itemText').value = "";
                 document.getElementById('itemUrl').value = "";
+                document.getElementById('itemType').value = "light"; // رجوع للافتراضي
             }
         });
 
-        function getMediaHtml(url, title) {
-    if (!url) return '';
-    let u = url.toLowerCase();
-    
-    // 1. الصور
-    if (!u.includes('.pdf') && !u.includes('drive.google.com') && !u.includes('youtube.com') && !u.includes('youtu.be') && !u.match(/\.(mp4|webm|ogg|mov|mp3|wav|ogg|m4a)$/)) {
-        return `
-        <div style="position: relative; margin-top: 15px;">
-            <div class="media-container" style="background: transparent; border: none;">
-                <img src="${url}" alt="${title}" style="max-width: 100%; border-radius: 12px;">
-            </div>
-            <div style="text-align: center; margin-top: 10px;">
-                <a href="${url}" target="_blank" download style="display: inline-block; background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">📥 تحميل الصورة</a>
-            </div>
-            <a href="${url}" target="_blank" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; text-decoration: none; font-size: 20px;">⤢</a>
-        </div>`;
-    }
-    
-    // 2. الفيديو
-    if (u.match(/\.(mp4|webm|ogg|mov)$/) != null) {
-        return `
-        <div style="position: relative; margin-top: 15px;">
-            <div class="media-container">
-                <video controls src="${url}"></video>
-            </div>
-            <div style="text-align: center; margin-top: 10px;">
-                <a href="${url}" target="_blank" download style="display: inline-block; background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">📥 تحميل الفيديو</a>
-            </div>
-        </div>`;
-    }
-    
-    // 3. الصوت
-    if (u.match(/\.(mp3|wav|ogg|m4a)$/) != null) {
-        return `
-        <div style="position: relative; margin-top: 15px;">
-            <div class="media-container" style="background:transparent; border:none;">
-                <audio controls src="${url}"></audio>
-            </div>
-            <div style="text-align: center; margin-top: 10px;">
-                <a href="${url}" target="_blank" download style="display: inline-block; background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">📥 تحميل الصوت</a>
-            </div>
-        </div>`;
-    }
-    
-    // 4. يوتيوب
-    if (u.includes('youtube.com') || u.includes('youtu.be')) {
-        let vidId = u.includes('youtu.be') ? u.split('/').pop().split('?')[0] : new URLSearchParams(new URL(url).search).get('v');
-        if (vidId) {
-            return `
-            <div style="position: relative; margin-top: 15px;">
-                <div class="media-container">
-                    <iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe>
-                </div>
-                <div style="text-align: center; margin-top: 10px;">
-                    <a href="${url}" target="_blank" style="display: inline-block; background: #ff0000; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">▶️ فتح على يوتيوب</a>
-                </div>
-            </div>`;
-        }
-    }
-    
-    // 5. ملفات الـ PDF وجوجل درايف
-    if (u.includes('.pdf') || u.includes('drive.google.com')) {
-        let finalUrl = url;
-        let downloadUrl = url;
-
-        if (u.includes('drive.google.com')) {
-            let fileId = u.includes('/file/d/') ? url.split('/file/d/')[1].split('/')[0] : url.split('id=')[1]?.split('&')[0];
-            if (fileId) {
-                finalUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-                downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`; 
+        // ✅ دالة العرض المعدلة
+        function getMediaHtml(url, title, type) {
+            if (!url) return '';
+            let u = url.toLowerCase();
+            
+            // 1. لو النوع "تقيل" (heavy)
+            if (type === 'heavy') {
+                let finalUrl = url;
+                let downloadUrl = url;
+                if (u.includes('drive.google.com')) {
+                    let fileId = u.includes('/file/d/') ? url.split('/file/d/')[1].split('/')[0] : url.split('id=')[1]?.split('&')[0];
+                    if (fileId) {
+                        finalUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                        downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`; 
+                    }
+                }
+                return `
+                <div style="position: relative; margin-top: 15px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 30px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                    <div style="font-size: 60px; line-height: 1;">📚</div>
+                    <h4 style="color: var(--text); margin: 0; font-size: 18px;">📄 ${title || 'ملف للتحميل'}</h4>
+                    <p style="color: var(--muted); font-size: 14px; margin: 0;">هذا الملف كبير. يرجى التحميل أو العرض.</p>
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; width: 100%; margin-top: 10px;">
+                        <a href="${downloadUrl}" target="_blank" style="display: inline-block; background: #10b981; color: #fff; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">📥 تحميل الملف</a>
+                        <a href="${url}" target="_blank" style="display: inline-block; background: var(--accent); color: #fff; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px;">👁️ عرض الملف</a>
+                    </div>
+                </div>`;
             }
-        }
-        
-        return `
-        <div style="position: relative; margin-top: 15px;">
-            <div class="media-container" style="height: 500px; overflow: hidden; background: #fff;">
-                <iframe src="${finalUrl}" style="width: 100%; height: 100%; border: none;"></iframe>
-            </div>
-            <div style="text-align: center; margin-top: 10px;">
-                <a href="${downloadUrl}" target="_blank" style="display: inline-block; background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">📥 تحميل الملف</a>
-            </div>
-            <a href="${url}" target="_blank" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; text-decoration: none; font-size: 20px;">⤢</a>
-        </div>`;
-    }
-    
-    // 6. أي رابط تاني
-    return `
-    <div style="text-align: center; margin-top: 15px;">
-        <a href="${url}" target="_blank" style="display:inline-block;background:#4f46e5;color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:800;">🔗 فتح الرابط</a>
-    </div>`;
+
+            // 2. لو النوع "خفيف" (light) أو مش محدد (الافتراضي)
+            // الصور
+            if (!u.includes('.pdf') && !u.includes('drive.google.com') && !u.includes('youtube.com') && !u.includes('youtu.be') && !u.match(/\.(mp4|webm|ogg|mov|mp3|wav|ogg|m4a)$/)) {
+                return `
+                <div style="position: relative; margin-top: 15px;">
+                    <div class="media-container" style="background: transparent; border: none;">
+                        <img src="${url}" alt="${title}" style="max-width: 100%; border-radius: 12px;">
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <a href="${url}" target="_blank" download style="display: inline-block; background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">📥 تحميل الصورة</a>
+                    </div>
+                    <a href="${url}" target="_blank" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; text-decoration: none; font-size: 20px;">⤢</a>
+                </div>`;
+            }
+            // الفيديو
+            if (u.match(/\.(mp4|webm|ogg|mov)$/) != null) {
+                return `
+                <div style="position: relative; margin-top: 15px;">
+                    <div class="media-container">
+                        <video controls src="${url}"></video>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <a href="${url}" target="_blank" download style="display: inline-block; background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">📥 تحميل الفيديو</a>
+                    </div>
+                </div>`;
+            }
+            // الصوت
+            if (u.match(/\.(mp3|wav|ogg|m4a)$/) != null) {
+                return `
+                <div style="position: relative; margin-top: 15px;">
+                    <div class="media-container" style="background:transparent; border:none;">
+                        <audio controls src="${url}"></audio>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <a href="${url}" target="_blank" download style="display: inline-block; background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">📥 تحميل الصوت</a>
+                    </div>
+                </div>`;
+            }
+            // يوتيوب
+            if (u.includes('youtube.com') || u.includes('youtu.be')) {
+                let vidId = u.includes('youtu.be') ? u.split('/').pop().split('?')[0] : new URLSearchParams(new URL(url).search).get('v');
+                if (vidId) {
+                    return `
+                    <div style="position: relative; margin-top: 15px;">
+                        <div class="media-container">
+                            <iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe>
+                        </div>
+                        <div style="text-align: center; margin-top: 10px;">
+                            <a href="${url}" target="_blank" style="display: inline-block; background: #ff0000; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">▶️ فتح على يوتيوب</a>
+                        </div>
+                    </div>`;
+                }
+            }
+            // PDF (لو النوع light)
+            if (u.includes('.pdf') || u.includes('drive.google.com')) {
+                let finalUrl = url;
+                let downloadUrl = url;
+                if (u.includes('drive.google.com')) {
+                    let fileId = u.includes('/file/d/') ? url.split('/file/d/')[1].split('/')[0] : url.split('id=')[1]?.split('&')[0];
+                    if (fileId) {
+                        finalUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                        downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`; 
+                    }
+                }
+                return `
+                <div style="position: relative; margin-top: 15px;">
+                    <div class="media-container" style="height: 500px; overflow: hidden; background: #fff;">
+                        <iframe src="${finalUrl}" style="width: 100%; height: 100%; border: none;"></iframe>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <a href="${downloadUrl}" target="_blank" style="display: inline-block; background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">📥 تحميل الملف</a>
+                    </div>
+                    <a href="${url}" target="_blank" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; text-decoration: none; font-size: 20px;">⤢</a>
+                </div>`;
+            }
+            // أي رابط تاني
+            return `
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="${url}" target="_blank" style="display:inline-block;background:#4f46e5;color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:800;">🔗 فتح الرابط</a>
+            </div>`;
         }
     </script>
 </body>
 </html>
+    

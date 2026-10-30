@@ -41,26 +41,27 @@
 
         /* شريط المستخدم */
        #userBar { background: #1e293b; color: #fff; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; border-bottom: 2px solid #4f46e5; }
-        .user-name { 
-    background: transparent; /* شيلنا الخلفية */
-    color: #60a5fa; /* لون أزرق فاتح */
-    padding: 5px 0; 
+
+/* زر اسم المستخدم (جوه المربع، حجم أصغر، من غير إيد) */
+.user-name { 
+    background: rgba(255,255,255,0.1); /* رجعنا الخلفية */
+    padding: 5px 15px; 
+    border-radius: 20px; 
     display: flex; 
     align-items: center; 
     gap: 8px; 
     cursor: pointer; 
     transition: 0.2s; 
-    font-size: 16px; 
-    font-weight: bold;
-    text-decoration: underline; /* الخط اللي تحت */
-    text-underline-offset: 4px; /* مسافة الخط عن الكلام */
+    font-size: 14px; /* صغرنا الخط شوية */
 }
 .user-name:hover { 
-    color: #3b82f6; /* أزرق أغمق لما تقف عليه */
+    background: rgba(255,255,255,0.2); 
 }
-		.user-info { display: flex; align-items: center; gap: 10px; }
-        .        .admin-badge { background: #10b981; color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
 
+.user-info { display: flex; align-items: center; gap: 10px; }
+
+/* صلحنا الخطأ الإملائي هنا (شلنا النقطة الزيادة) */
+.admin-badge { background: #10b981; color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
         /* ✅ زر البحث في شريط المستخدم */
         .search-btn-bar {
             background: rgba(79, 70, 229, 0.15);
@@ -221,7 +222,7 @@
     <div id="userBar">
         <div class="user-info">
             <span id="welcomeText" class="user-name" onclick="showPage('profile')">
-                👤 👋 أهلاً بك
+                👤أهلاً 
             </span>
             <span id="adminBadge" class="admin-badge" style="display:none;">مدير</span>
         </div>

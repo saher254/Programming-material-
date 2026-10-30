@@ -612,7 +612,7 @@
         const welcomeText = document.getElementById('welcomeText');
         const adminBadge = document.getElementById('adminBadge');
 
-        welcomeText.innerHTML = '👤 👋 أهلاً، ' + currentUser.username;
+        welcomeText.innerHTML = '👤' + currentUser.username;
         userBar.style.display = 'flex';
 
         if (currentUser.role === 'admin') {

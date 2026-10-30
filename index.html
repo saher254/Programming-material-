@@ -40,11 +40,26 @@
         .main-header h1 { font-size: 22px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 800; }
 
         /* شريط المستخدم */
-        #userBar { background: #1e293b; color: #fff; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; border-bottom: 2px solid #4f46e5; }
-        .user-info { display: flex; align-items: center; gap: 10px; }
-        .user-name { background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s; }
-        .user-name:hover { background: rgba(255,255,255,0.2); }
-        .admin-badge { background: #10b981; color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
+       #userBar { background: #1e293b; color: #fff; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; border-bottom: 2px solid #4f46e5; }
+        .user-name { 
+    background: transparent; /* شيلنا الخلفية */
+    color: #60a5fa; /* لون أزرق فاتح */
+    padding: 5px 0; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    cursor: pointer; 
+    transition: 0.2s; 
+    font-size: 16px; 
+    font-weight: bold;
+    text-decoration: underline; /* الخط اللي تحت */
+    text-underline-offset: 4px; /* مسافة الخط عن الكلام */
+}
+.user-name:hover { 
+    color: #3b82f6; /* أزرق أغمق لما تقف عليه */
+}
+		.user-info { display: flex; align-items: center; gap: 10px; }
+        .        .admin-badge { background: #10b981; color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
 
         /* ✅ زر البحث في شريط المستخدم */
         .search-btn-bar {

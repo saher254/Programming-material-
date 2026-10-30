@@ -44,25 +44,23 @@
 
 /* ✅ الدايرة: صغيرة، أزرق، تحتها خط */
 .user-name { 
-    background: rgba(79, 70, 229, 0.15); /* لون الخلفية */
-    border: 1px solid rgba(79, 70, 229, 0.4); /* الحدود */
-    color: #60a5fa; /* لون النص أزرق */
-    width: 70px;  /* عرض الدايرة */
-    height: 70px; /* طول الدايرة (لازم يساوي العرض عشان تبقى دايرة) */
-    border-radius: 50%; /* دي اللي بتخليها دايرة */
+    background: rgba(79, 70, 229, 0.15); 
+    border: 1px solid rgba(79, 70, 229, 0.4); 
+    color: #60a5fa; 
+    width: 90px;   /* العرض أكبر عشان تبقى بيضاوية */
+    height: 35px;  /* الطول أصغر */
+    border-radius: 20px; /* دي اللي بتعمل الشكل البيضاوي (كبسولة) */
     display: flex; 
-    flex-direction: column; /* عشان لو الاسم طويل ينزل تحت */
-    justify-content: center; /* توسيط راسي */
-    align-items: center; /* توسيط أفقي */
+    justify-content: center; 
+    align-items: center; 
     cursor: pointer; 
     transition: 0.2s; 
-    font-size: 12px; /* حجم خط صغير عشان يدخل جوه الدايرة */
+    font-size: 13px; 
     font-weight: 700;
-    text-decoration: underline; /* الخط اللي تحت */
+    text-decoration: underline; 
     text-underline-offset: 2px;
     text-align: center;
-    line-height: 1.2;
-    padding: 5px; /* مساحة داخلية عشان الكلام ميبقاش لازق في الحدود */
+    padding: 0 10px; /* مساحة من الجناب عشان الاسم ميبقاش لازق */
 }
 .user-name:hover { 
     background: rgba(79, 70, 229, 0.3); 

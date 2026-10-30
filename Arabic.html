@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مادة العربي | منصة البكالوريا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #ffffff; --text: #0f172a; --card: #ffffff; --accent: #4f46e5;
+        --border: #e2e8f0; --danger: #ef4444; --muted: #64748b;
+        --shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+    }
+    body.dark {
+        --bg: #0b1120; --text: #f8fafc; --card: #1e293b; --border: #334155; --muted: #94a3b8; 
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+    body { background: var(--bg); color: var(--text); transition: 0.3s; min-height: 100vh; }
+
+    .container { max-width: 900px; margin: 25px auto; padding: 0 15px; width: 100%; }
+
+    .admin-panel { border: 2px solid #4f46e5; background: rgba(79, 70, 229, 0.05); border-radius: 20px; padding: 20px; margin-bottom: 25px; }
+    .admin-panel h2 { font-size: 18px; color: #4f46e5; margin-bottom: 10px; }
+    .admin-panel h3 { font-size: 15px; color: #4f46e5; margin: 15px 0 5px; }
+    input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 10px; font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); outline: none; }
+    button { font-family: 'Cairo', sans-serif; cursor: pointer; border: none; border-radius: 10px; padding: 10px 15px; font-weight: 700; transition: 0.2s; }
+    .btn-primary { background: #4f46e5; color: #fff; }
+    .btn-danger { background: #ef4444; color: #fff; }
+    .btn-secondary { background: #f59e0b; color: #fff; }
+    .btn-small { padding: 5px 10px; font-size: 12px; }
+    .hidden { display: none !important; }
+
+    #page-units { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+    .unit-card { 
+        background: var(--card); border: 2px solid var(--border); border-radius: 20px; 
+        padding: 25px 30px; cursor: pointer; transition: 0.3s; width: 100%;
+        display: flex; justify-content: space-between; align-items: center; position: relative;
+    }
+    .unit-card:hover { border-color: #4f46e5; transform: translateY(-3px); box-shadow: var(--shadow); }
+    .unit-card h3 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+    .unit-card p { font-size: 15px; color: var(--muted); }
+    .unit-card-admin { position: absolute; top: 15px; left: 15px; display: flex; gap: 5px; }
+    .unit-card .arrow-icon { font-size: 24px; color: #4f46e5; background: rgba(79, 70, 229, 0.1); width: 45px; height: 45px; display: grid; place-items: center; border-radius: 50%; }
+
+    #page-lessons { display: none; }
+    .back-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); margin-bottom: 15px; }
+    .lesson-box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 15px; margin-bottom: 15px; }
+    .lesson-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px; }
+    .lesson-title { font-size: 18px; font-weight: 800; color: #4f46e5; }
+    .content-item { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+    .content-title { font-weight: 800; font-size: 15px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+    .content-text { line-height: 1.8; font-size: 14px; white-space: pre-wrap; color: var(--muted); margin-bottom: 10px; }
+
+    .media-container { margin-top: 10px; border-radius: 12px; overflow: hidden; background: #000; display: flex; justify-content: center; position: relative; }
+    .media-container img { max-width: 100%; border-radius: 12px; }
+    .media-container video { max-width: 100%; }
+    .media-container audio { width: 100%; margin: 10px 0; }
+    .media-container iframe { width: 100%; height: 300px; border: none; }
+    .zoom-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; text-decoration: none; font-size: 16px; }
+    
+    .empty-msg { padding: 20px; text-align: center; color: var(--muted); width: 100%; }
+</style>
+</head>
+<body>
+    <div class="container">
+        
+        <section id="adminPanel" class="admin-panel hidden">
+            <h2>🛠️ لوحة تحكم المدير (عربي)</h2>
+            <h3>① إضافة وحدة</h3>
+            <input id="unitName" placeholder="اسم الوحدة">
+            <button id="addUnitBtn" class="btn-primary">➕ إضافة</button>
+
+            <h3>② إضافة درس</h3>
+            <select id="lessonUnit"><option value="">اختر الوحدة...</option></select>
+            <input id="lessonName" placeholder="اسم الدرس">
+            <button id="addLessonBtn" class="btn-primary">➕ إضافة</button>
+
+            <h3>③ إضافة محتوى</h3>
+            <select id="contentUnit"><option value="">اختر الوحدة...</option></select>
+            <select id="contentLesson"><option value="">اختر الدرس...</option></select>
+            <input id="itemTitle" placeholder="عنوان المحتوى">
+            <textarea id="itemText" rows="2" placeholder="النص (اختياري)..."></textarea>
+            <input id="itemUrl" type="url" placeholder="رابط صورة، فيديو، أو PDF (اختياري)...">
+            <button id="addItemBtn" class="btn-primary">💾 حفظ</button>
+        </section>
+
+        <div id="page-units"></div>
+
+        <div id="page-lessons">
+            <button class="back-btn" onclick="showUnitsPage()">🔙 رجوع للوحدات</button>
+            <h2 id="currentUnitTitle" style="font-size:22px; margin-bottom:15px; color:#4f46e5;"></h2>
+            <div id="lessonsContainer"></div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDe5INvR_ifEARHmw7M0qqBQ34-G6z4p7w",
+            authDomain: "mansa-educational.firebaseapp.com",
+            projectId: "mansa-educational",
+            storageBucket: "mansa-educational.firebasestorage.app",
+            messagingSenderId: "144298769750",
+            appId: "1:144298769750:web:43eb0c63e5d2acb37baaf7"
+        };
+
+        const app = initializeApp(firebaseConfig, "arabicApp");
+        const db = getFirestore(app);
+        const contentRef = collection(db, "content");
+
+        if (localStorage.getItem('bakaloria_theme') === 'dark') { document.body.classList.add('dark'); }
+
+        let isAdmin = localStorage.getItem('bakaloria_admin') === 'true';
+        if (isAdmin) document.getElementById('adminPanel').classList.remove('hidden');
+
+        let units = [], lessons = [], items = [];
+        let selectedUnitId = null;
+
+        function sortOldestFirst(list) { return list.sort((a, b) => Number(a.createdAt || 0) - Number(b.createdAt || 0)); }
+
+        async function loadData() {
+            try {
+                const q = query(contentRef, where("subject", "==", "arabic"));
+                const snapshot = await getDocs(q);
+                const records = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                units = sortOldestFirst(records.filter(x => x.kind === "unit"));
+                lessons = sortOldestFirst(records.filter(x => x.kind === "lesson"));
+                items = sortOldestFirst(records.filter(x => x.kind === "item"));
+
+                fillSelectors();
+                renderUnitsPage();
+                if (selectedUnitId) renderLessonsPage(selectedUnitId);
+            } catch (e) { console.error(e); }
+        }
+
+        function fillSelectors() {
+            ['lessonUnit', 'contentUnit'].forEach(id => {
+                const select = document.getElementById(id);
+                const oldVal = select.value;
+                select.innerHTML = '<option value="">اختر الوحدة...</option>';
+                units.forEach(u => select.innerHTML += `<option value="${u.id}">${u.title}</option>`);
+                if (units.some(u => u.id === oldVal)) select.value = oldVal;
+            });
+            fillLessonSelector();
+        }
+
+        function fillLessonSelector() {
+            const unitId = document.getElementById('contentUnit').value;
+            const select = document.getElementById('contentLesson');
+            select.innerHTML = '<option value="">اختر الدرس...</option>';
+            lessons.filter(l => l.parentId === unitId).forEach(l => select.innerHTML += `<option value="${l.id}">${l.title}</option>`);
+        }
+        document.getElementById('contentUnit').addEventListener('change', fillLessonSelector);
+
+        function renderUnitsPage() {
+            const container = document.getElementById('page-units');
+            container.innerHTML = '';
+            if (units.length === 0) { container.innerHTML = '<div class="empty-msg">لا توجد وحدات.</div>'; return; }
+
+            units.forEach(unit => {
+                const card = document.createElement('div');
+                card.className = 'unit-card';
+                card.onclick = () => openUnit(unit.id, unit.title);
+
+                let adminBtns = '';
+                if (isAdmin) {
+                    adminBtns = `<div class="unit-card-admin">
+                        <button class="btn-secondary btn-small" onclick="event.stopPropagation(); editRecord('${unit.id}', 'unit', '${unit.title}')">✏️</button>
+                        <button class="btn-danger btn-small" onclick="event.stopPropagation(); deleteRecord('${unit.id}', 'الوحدة')">🗑️</button>
+                    </div>`;
+                }
+
+                card.innerHTML = `
+                    ${adminBtns}
+                    <div>
+                        <h3>📘 ${unit.title}</h3>
+                        <p>${lessons.filter(l => l.parentId === unit.id).length} دروس</p>
+                    </div>
+                    <div class="arrow-icon">⬅️</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.openUnit = function(unitId, unitTitle) {
+            selectedUnitId = unitId;
+            document.getElementById('currentUnitTitle').textContent = "📖 " + unitTitle;
+            document.getElementById('page-units').style.display = 'none';
+            document.getElementById('page-lessons').style.display = 'block';
+            renderLessonsPage(unitId);
+            window.scrollTo(0, 0);
+        };
+
+        window.showUnitsPage = function() {
+            selectedUnitId = null;
+            document.getElementById('page-lessons').style.display = 'none';
+            document.getElementById('page-units').style.display = 'flex';
+            window.scrollTo(0, 0);
+        };
+
+        function renderLessonsPage(unitId) {
+            const container = document.getElementById('lessonsContainer');
+            container.innerHTML = '';
+            const unitLessons = lessons.filter(l => l.parentId === unitId);
+
+            if (unitLessons.length === 0) {
+                container.innerHTML = '<div class="empty-msg">لا توجد دروس في هذه الوحدة.</div>';
+                return;
+            }
+
+            unitLessons.forEach(lesson => {
+                const box = document.createElement('div');
+                box.className = 'lesson-box';
+                
+                let adminBtns = isAdmin ? `<div style="display:flex; gap:5px;">
+                    <button class="btn-secondary btn-small" onclick="editRecord('${lesson.id}', 'lesson', '${lesson.title}')">✏️</button>
+                    <button class="btn-danger btn-small" onclick="deleteRecord('${lesson.id}', 'الدرس')">🗑️</button>
+                </div>` : '';
+
+                let html = `<div class="lesson-header">
+                    <div class="lesson-title">📝 ${lesson.title}</div>
+                    ${adminBtns}
+                </div>`;
+
+                const lessonItems = items.filter(i => i.parentId === lesson.id);
+                if (lessonItems.length === 0) html += `<p style="color:var(--muted); font-size:14px;">لا يوجد محتوى.</p>`;
+
+                lessonItems.forEach(item => {
+                    html += `<div class="content-item">
+                        <div class="content-title">
+                            <span>🔹 ${item.title}</span>
+                            ${isAdmin ? `<div style="display:flex; gap:5px;">
+                                <button class="btn-secondary btn-small" onclick="editRecord('${item.id}', 'item', '${item.title}', '${item.text || ''}', '${item.url || ''}')">✏️</button>
+                                <button class="btn-danger btn-small" onclick="deleteRecord('${item.id}', 'المحتوى')">🗑️</button>
+                            </div>` : ''}
+                        </div>
+                        ${item.text ? `<div class="content-text">${item.text}</div>` : ''}
+                        ${getMediaHtml(item.url, item.title)}
+                    </div>`;
+                });
+                box.innerHTML = html;
+                container.appendChild(box);
+            });
+        }
+
+        async function addRecord(data) {
+            if (!isAdmin) return alert("سجل دخول كمدير أولاً.");
+            try {
+                await addDoc(contentRef, { ...data, subject: "arabic", createdAt: Date.now() });
+
+                const kindName = data.kind === 'unit' ? 'وحدة جديدة' : data.kind === 'lesson' ? 'درس جديد' : 'محتوى جديد';
+                const icon = data.kind === 'unit' ? '📘' : data.kind === 'lesson' ? '📝' : '🔹';
+                await addDoc(collection(db, "notifications"), {
+                    title: `${icon} ${kindName}`,
+                    message: `تمت إضافة "${data.title}" في مادة العربي`,
+                    type: 'success',
+                    icon: icon,
+                    createdAt: Date.now()
+                });
+
+                await loadData();
+                return true;
+            } catch (e) { alert("خطأ: " + e.message); return false; }
+        }
+
+        document.getElementById('addUnitBtn').addEventListener('click', async () => {
+            const title = document.getElementById('unitName').value.trim();
+            if (!title) return alert("اكتب اسم الوحدة");
+            if (await addRecord({ kind: "unit", title })) document.getElementById('unitName').value = "";
+        });
+
+        document.getElementById('addLessonBtn').addEventListener('click', async () => {
+            const parentId = document.getElementById('lessonUnit').value;
+            const title = document.getElementById('lessonName').value.trim();
+            if (!parentId || !title) return alert("اختر الوحدة واكتب اسم الدرس");
+            if (await addRecord({ kind: "lesson", parentId, title })) {
+                document.getElementById('lessonName').value = "";
+                document.getElementById('contentUnit').value = parentId;
+                fillLessonSelector();
+            }
+        });
+
+        document.getElementById('addItemBtn').addEventListener('click', async () => {
+            const parentId = document.getElementById('contentLesson').value;
+            const title = document.getElementById('itemTitle').value.trim();
+            const text = document.getElementById('itemText').value.trim();
+            const url = document.getElementById('itemUrl').value.trim();
+            if (!parentId || !title || (!text && !url)) return alert("اكمل البيانات");
+            if (await addRecord({ kind: "item", parentId, title, text, url })) {
+                document.getElementById('itemTitle').value = "";
+                document.getElementById('itemText').value = "";
+                document.getElementById('itemUrl').value = "";
+            }
+        });
+
+        function getMediaHtml(url, title) {
+            if (!url) return '';
+            let u = url.toLowerCase();
+            if (u.includes('youtube.com') || u.includes('youtu.be')) {
+                let vidId = u.includes('youtu.be') ? u.split('/').pop().split('?')[0] : new URLSearchParams(new URL(url).search).get('v');
+                if (vidId) return `<div class="media-container"><iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe></div>`;
+            }
+            if (u.includes('.pdf') || u.includes('drive.google.com')) {
+                let finalUrl = url;
+                if (u.includes('drive.google.com')) {
+                    let fileId = u.includes('/file/d/') ? url.split('/file/d/')[1].split('/')[0] : url.split('id=')[1]?.split('&')[0];
+                    if (fileId) finalUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                }
+                return `<div class="media-container" style="height:300px; background:#fff;"><iframe src="${finalUrl}"></iframe><a href="${url}" target="_blank" class="zoom-btn">⤢</a></div>`;
+            }
+            if (u.match(/\.(mp4|webm|ogg|mov)$/)) return `<div class="media-container"><video controls src="${url}"></video></div>`;
+            if (u.match(/\.(mp3|wav|m4a|oga)$/)) return `<div class="media-container" style="background:transparent;"><audio controls src="${url}"></audio></div>`;
+            return `<div class="media-container" style="background:transparent;"><img src="${url}" alt="${title}"><a href="${url}" target="_blank" class="zoom-btn">⤢</a></div>`;
+        }
+
+        window.deleteRecord = async function(id, name) {
+            if (!isAdmin) return;
+            if (!confirm(`متأكد من حذف ${name}؟`)) return;
+            try { await deleteDoc(doc(db, "content", id)); await loadData(); } 
+            catch (e) { alert("خطأ: " + e.message); }
+        };
+
+        window.editRecord = async function(id, type, oldTitle, oldText = '', oldUrl = '') {
+            if (!isAdmin) return;
+            try {
+                if (type === 'unit' || type === 'lesson') {
+                    const newTitle = prompt("الاسم الجديد:", oldTitle);
+                    if (newTitle && newTitle.trim()) await updateDoc(doc(db, "content", id), { title: newTitle.trim() });
+                } else if (type === 'item') {
+                    const newTitle = prompt("العنوان:", oldTitle);
+                    if (newTitle === null) return;
+                    const newText = prompt("النص:", oldText);
+                    if (newText === null) return;
+                    const newUrl = prompt("الرابط:", oldUrl);
+                    if (newUrl === null) return;
+                    await updateDoc(doc(db, "content", id), { title: newTitle.trim(), text: newText.trim(), url: newUrl.trim() });
+                }
+                await loadData();
+            } catch (e) { alert("خطأ: " + e.message); }
+        };
+
+        loadData();
+    </script>
+</body>
+</html>

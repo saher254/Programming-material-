@@ -39,30 +39,39 @@
         .main-header { display: flex; justify-content: center; align-items: center; padding: 15px 25px; background: var(--accent); color: var(--accent-text); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: 0.4s; }
         .main-header h1 { font-size: 22px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 800; }
 
-        /* شريط المستخدم */
-       #userBar { background: #1e293b; color: #fff; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; border-bottom: 2px solid #4f46e5; }
+        /* شريط المستخدم */ 
+		#userBar { background: #1e293b; color: #fff; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; border-bottom: 2px solid #4f46e5; }
 
-/* زر اسم المستخدم (جوه المربع، حجم أصغر، من غير إيد) */
+/* ✅ الدايرة: صغيرة، أزرق، تحتها خط */
 .user-name { 
-    background: rgba(255,255,255,0.1); /* رجعنا الخلفية */
-    padding: 5px 15px; 
-    border-radius: 20px; 
+    background: rgba(79, 70, 229, 0.15); /* لون الخلفية */
+    border: 1px solid rgba(79, 70, 229, 0.4); /* الحدود */
+    color: #60a5fa; /* لون النص أزرق */
+    width: 70px;  /* عرض الدايرة */
+    height: 70px; /* طول الدايرة (لازم يساوي العرض عشان تبقى دايرة) */
+    border-radius: 50%; /* دي اللي بتخليها دايرة */
     display: flex; 
-    align-items: center; 
-    gap: 8px; 
+    flex-direction: column; /* عشان لو الاسم طويل ينزل تحت */
+    justify-content: center; /* توسيط راسي */
+    align-items: center; /* توسيط أفقي */
     cursor: pointer; 
     transition: 0.2s; 
-    font-size: 14px; /* صغرنا الخط شوية */
+    font-size: 12px; /* حجم خط صغير عشان يدخل جوه الدايرة */
+    font-weight: 700;
+    text-decoration: underline; /* الخط اللي تحت */
+    text-underline-offset: 2px;
+    text-align: center;
+    line-height: 1.2;
+    padding: 5px; /* مساحة داخلية عشان الكلام ميبقاش لازق في الحدود */
 }
 .user-name:hover { 
-    background: rgba(255,255,255,0.2); 
+    background: rgba(79, 70, 229, 0.3); 
+    color: #93c5fd;
 }
 
 .user-info { display: flex; align-items: center; gap: 10px; }
-
-/* صلحنا الخطأ الإملائي هنا (شلنا النقطة الزيادة) */
 .admin-badge { background: #10b981; color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
-        /* ✅ زر البحث في شريط المستخدم */
+		/* ✅ زر البحث في شريط المستخدم */
         .search-btn-bar {
             background: rgba(79, 70, 229, 0.15);
             color: #a5b4fc;
